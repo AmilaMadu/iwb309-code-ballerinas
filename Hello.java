@@ -6,3 +6,7 @@ public class Hello{
     }
 }
 // Lahiru
+
+//comment again
+
+//comment 2
