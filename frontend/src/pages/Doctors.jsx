@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import App from '../App'
 import { AppContext } from '../Contexts/AppContext'
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 
@@ -9,6 +9,7 @@ const Doctors = () => {
 
   const {speciality} = useParams()
   const [filterDoc, setFilterDoc] = useState([])
+  const navigate = useNavigate()
 
   const {doctors} = useContext(AppContext)
 
@@ -27,17 +28,17 @@ useEffect(() => {
 
   return (
     <div>
-      <p>Browse through the doctors specialist.</p>
-      <div>
-        <div>
-          <p>General Physician</p>
-          <p>Gynecologist</p>
-          <p>Dermatologist</p>
-          <p>Pediatricians</p>
-          <p>Neurologist</p>
-          <p>Gastroenterologist</p>
+      <p className='text-gray-600'>Browse through the doctors specialist.</p>
+      <div className='flex flex-col sm:flex-row items-start gap-5 mt-5'>
+        <div className='flex flex-col gap-4 text-sm text-gray-600'>
+          <p onClick={()=> speciality === 'General Physician' ? navigate('/doctors') : navigate('/doctors/General Physician')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer ${speciality === "" ? "bg-indigo-100 text-black" : ""}`}>General Physician</p>
+          <p onClick={()=> speciality === 'Gynecologist' ? navigate('/doctors') : navigate('/doctors/Gynecologist')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer`}>Gynecologist</p>
+          <p onClick={()=> speciality === 'Dermatologist' ? navigate('/doctors') : navigate('/doctors/Dermatologist')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer`}>Dermatologist</p>
+          <p onClick={()=> speciality === 'Pediatricians' ? navigate('/doctors') : navigate('/doctors/Pediatricians')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer`}>Pediatricians</p>
+          <p onClick={()=> speciality === 'Neurologist' ? navigate('/doctors') : navigate('/doctors/Neurologist')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer`}>Neurologist</p>
+          <p onClick={()=> speciality === 'Gastroenterologist' ? navigate('/doctors') : navigate('/doctors/Gastroenterologist')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer`}>Gastroenterologist</p>
         </div>
-        <div>
+        <div className='w-full grid grid-cols-auto gap-4 gap-y-6'>
         {
           filterDoc.map((item,index)=>(
               <div onClick={()=>navigate(`/appointment/${item._id}`)} className='border border-blue-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500' key={index}>

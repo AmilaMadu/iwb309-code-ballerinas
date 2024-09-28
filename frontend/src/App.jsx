@@ -30,7 +30,7 @@ const App = () => {
       </Routes>
       <Footer/>
 
-      <Routes>
+      {/* <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/doctors' element={<Doctors />} />
         <Route path='/doctors/:speciality' element={<Doctors />} />
@@ -40,7 +40,7 @@ const App = () => {
         <Route path='/my-profile' element={<MyProfile />} />
         <Route path='/my-appointments' element={<MyAppointments />} />
         <Route path='/appointment/:docId' element={<Appointment />} />
-      </Routes>
+      </Routes> */}
     </div>
   )
 }
