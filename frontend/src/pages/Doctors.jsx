@@ -21,8 +21,9 @@ const Doctors = () => {
 }
 
 useEffect(() => {
-  applyFilter()
-}, [doctors,speciality])
+  console.log("Selected speciality:", speciality);
+  applyFilter();
+}, [doctors, speciality]);
 
   return (
     <div>
