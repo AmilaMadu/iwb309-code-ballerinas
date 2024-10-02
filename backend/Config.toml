@@ -1,0 +1,5 @@
+host = "<Database Host>"
+port = <Database Port>
+user = <Username of MySQL user>
+password = <Password of MySQL user>
+database = <database name>
