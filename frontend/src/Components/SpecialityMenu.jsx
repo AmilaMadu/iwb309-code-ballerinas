@@ -1,24 +1,27 @@
-import React from 'react'
-import Header from './Header'
-import { specialityData } from '../assets/assets'   // Importing the specialityData from assets.js
-import { Link } from 'react-router-dom'
+import React from 'react';
+import Header from './Header';
+import { specialityData } from '../assets/assets';   // Importing the specialityData from assets.js
+import { Link } from 'react-router-dom';
+import { FaArrowRight } from 'react-icons/fa'; // Importing the arrow icon
 
 const SpecialityMenu = () => {
   return (
     <div className='flex flex-col items-center gap-4 py-16 text-gray-800' id='speciality'>
-        <h1 className='text-3xl font-medium'>Find by Speciality </h1>
-        {/*<p className='sm:w-1/3 text-center text-sm'>Find a doctor which suits your requirements and schedule your appointment now</p>*/}
-        <div className='flex sm:justify-center gap-4 pt-5 w-full overflow-scroll'>
-            {specialityData.map((item,index) => (
-                <Link onClick={() => scrollTo(0,0)} className='flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500' key={index} to={`doctors/${item.speciality}`}>
-                    <img className='w-16 sm:w-24 mb-2' src={item.image} alt='' />
-                    <p>{item.speciality}</p>
-                </Link>
-            ))}
-        </div>
-
+      <h1 className='text-3xl font-medium text-center'>I'm searching for a</h1>
+      <div className='w-full max-w-screen-lg flex flex-col items-center'>
+        <ul className='flex flex-col gap-4 w-full'>
+          {specialityData.map((item, index) => (
+            <li key={index} className='flex justify-center items-center gap-3 border-b pb-2 hover:bg-gray-100 transition-all'>
+              <Link to={`doctors/${item.speciality}`} className='flex items-center gap-3'>
+                <FaArrowRight className='text-blue-500 flex-shrink-0 self-center' /> {/* Aligning arrow */}
+                <span className='text-gray-800 text-lg'>{item.speciality}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default SpecialityMenu
+export default SpecialityMenu;
