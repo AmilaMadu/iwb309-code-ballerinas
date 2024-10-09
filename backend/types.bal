@@ -1,32 +1,23 @@
-public type Order record {|
-    readonly string id;
-    string customerId;
-    string date;
-    OrderStatus status;
-    string cargoId;
-    int quantity;
-    string item;
+// Type for Appointment
+public type MedicalAppointment record {| 
+    readonly int appointment_id;
+    string appointment_date;
+    string appointment_time;
 |};
 
-public type Cargo record {|
-    readonly string id;
-    string lat;
-    string lon;
-    string startFrom;
-    string endFrom;
-    CargoType cargoType;
+// Type for User (Patient)
+public type User record {| 
+    readonly int user_id;
+    string name;
+    string password;
+    string email;
 |};
 
-public enum OrderStatus {
-    PENDING,
-    SHIPPED,
-    DELIVERED,
-    CANCELED,
-    RETURNED
-};
-
-public enum CargoType {
-    SHIPEX = "ShipEx",
-    CARGO_WAVE = "CargoWave",
-    TRADE_LOGIX = "TradeLogix"
-};
+// Type for Doctor
+public type MedicalDoctor record {| 
+    readonly int doctor_id;
+    string doctor_name;
+    string specialized_area;
+    string availability;
+    int? appointment_id;  // Optional, as a doctor may not have an appointment yet
+|};

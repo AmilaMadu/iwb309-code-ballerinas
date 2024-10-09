@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppContext} from '../contexts/AppContext'
+import {AppContext} from '../Contexts/AppContext'
 import {useContext} from 'react'
 
 const MyAppointments = () => {

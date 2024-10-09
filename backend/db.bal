@@ -17,31 +17,62 @@ final mysql:Client dbClient = check new(
     options = connectionOptions
 );
 
-isolated function insertOrder(Order entry) returns sql:ExecutionResult|error {
-    Order {id, customerId, date, status, quantity, item, cargoId} = entry;
-    sql:ParameterizedQuery insertQuery = `INSERT INTO Orders (id, customerId, date, status, quantity, item, cargoId) VALUES (
-                                            ${id}, ${customerId}, ${date}, ${status}, ${quantity}, ${item}, ${cargoId})`;
+// Define the Appointment record
+type Appointment record {
+    string date;
+    string time;
+};
+
+// Define the Doctor record
+type Doctor record {
+    string name;
+    string specializedArea;
+    string availability;
+    int appointmentId;
+};
+
+// Insert a new appointment
+isolated function insertAppointment(Appointment entry) returns sql:ExecutionResult|error {
+    sql:ParameterizedQuery insertQuery = `INSERT INTO appointments (appointment_date, appointment_time) VALUES (
+                                                ${entry.date}, ${entry.time})`;
     return dbClient->execute(insertQuery);
 }
 
-isolated function selectOrder(string id) returns Order|sql:Error {
-    sql:ParameterizedQuery selectQuery = `SELECT * FROM Orders WHERE id = ${id}`;
+// Insert a new doctor
+isolated function insertDoctor(Doctor entry) returns sql:ExecutionResult|error {
+    sql:ParameterizedQuery insertQuery = `INSERT INTO doctors (doctor_name, specialized_area, availability, appointment_id) VALUES (
+                                            ${entry.name}, ${entry.specializedArea}, ${entry.availability}, ${entry.appointmentId})`;
+    return dbClient->execute(insertQuery);
+}
+
+// Retrieve all appointments
+isolated function selectAllAppointments() returns Appointment[]|error {
+    sql:ParameterizedQuery selectQuery = `SELECT * FROM appointments`;
+    stream<Appointment, error?> appointmentStream = dbClient->query(selectQuery);
+    return from Appointment appointment in appointmentStream select appointment;
+}
+
+// Retrieve appointment by ID
+isolated function selectAppointment(int appointmentId) returns Appointment|sql:Error {
+    sql:ParameterizedQuery selectQuery = `SELECT * FROM appointments WHERE appointment_id = ${appointmentId}`;
     return dbClient->queryRow(selectQuery);
 }
 
-isolated function selectAllOrders() returns Order[]|error {
-    sql:ParameterizedQuery selectQuery = `SELECT * FROM Orders`;
-    stream<Order, error?> orderStream = dbClient->query(selectQuery);
-    return from Order ord in orderStream select ord;
+// Retrieve all doctors
+isolated function selectAllDoctors() returns Doctor[]|error {
+    sql:ParameterizedQuery selectQuery = `SELECT * FROM doctors`;
+    stream<Doctor, error?> doctorStream = dbClient->query(selectQuery);
+    return from Doctor doctor in doctorStream select doctor;
 }
 
-isolated function selectOrdersByCargoId(string cargoId) returns Order[]|error {
-    sql:ParameterizedQuery selectQuery = `SELECT * FROM Orders WHERE cargoId = ${cargoId} order by quantity desc`;
-    stream<Order, error?> orderStream = dbClient->query(selectQuery);
-    return from Order ord in orderStream select ord;
-}
-
-isolated function getLocationOfCargo(string cargoId) returns Location|sql:Error {
-    sql:ParameterizedQuery selectQuery = `SELECT latitude, longitude FROM locations ORDER BY RAND() LIMIT 1`;
+// Retrieve doctor by ID
+isolated function selectDoctor(int doctorId) returns Doctor|sql:Error {
+    sql:ParameterizedQuery selectQuery = `SELECT * FROM doctors WHERE doctor_id = ${doctorId}`;
     return dbClient->queryRow(selectQuery);
 }
+
+// Retrieve location of a doctor (example of additional functionality)
+// isolated function getDoctorLocation(int doctorId) returns Location|sql:Error {
+//     sql:ParameterizedQuery selectQuery = `SELECT latitude, longitude FROM locations WHERE doctor_id = ${doctorId}`;
+//     return dbClient->queryRow(selectQuery);
+// }

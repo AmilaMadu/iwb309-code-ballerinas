@@ -1,44 +1,46 @@
-DROP TABLE IF EXISTS `Orders`;
-DROP TABLE IF EXISTS `Cargo`;
+-- Drop existing tables if they exist
+DROP TABLE IF EXISTS `Appointments`;
+DROP TABLE IF EXISTS `Doctors`;
+DROP TABLE IF EXISTS `Users`;
 
-CREATE TABLE `Cargo` (
-	`id` VARCHAR(191) NOT NULL,
-	`lat` VARCHAR(191) NOT NULL,
-	`lon` VARCHAR(191) NOT NULL,
-	`startFrom` VARCHAR(191) NOT NULL,
-	`endFrom` VARCHAR(191) NOT NULL,
-	`cargoType` ENUM('ShipEx', 'CargoWave', 'TradeLogix') NOT NULL,
-	PRIMARY KEY(`id`)
+-- Create Users table (patients)
+CREATE TABLE `Users` (
+    `user_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE `Orders` (
-	`id` VARCHAR(191) NOT NULL,
-	`customerId` VARCHAR(191) NOT NULL,
-	`date` VARCHAR(191) NOT NULL,
-	`status` ENUM('PENDING', 'SHIPPED', 'DELIVERED', 'CANCELED', 'RETURNED') NOT NULL,
-	`quantity` INT NOT NULL,
-	`item` VARCHAR(191) NOT NULL,
-	`cargoId` VARCHAR(191) NOT NULL,
-	FOREIGN KEY(`cargoId`) REFERENCES `Cargo`(`id`),
-	PRIMARY KEY(`id`)
+-- Create Doctors table
+CREATE TABLE `Doctors` (
+    `doctor_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `doctor_name` VARCHAR(255) NOT NULL,
+    `specialized_area` VARCHAR(255),
+    `availability` VARCHAR(255)
 );
 
-INSERT INTO Cargo (id, lat, lon, startFrom, endFrom, cargoType)
-VALUES
-    ('S-224', '1.2312', '72.1110', 'London', 'Washington', 'SHIPEX'),
-    ('S-225', '1.2542', '72.1650', 'Sydney', 'New York', 'TradeLogix'),
-    ('S-226', '1.2992', '72.6550', 'Sydney', 'London', 'CargoWave');
-
-CREATE TABLE locations (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    latitude DECIMAL(9,6),
-    longitude DECIMAL(9,6)
+-- Create Appointments table
+CREATE TABLE `Appointments` (
+    `appointment_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `appointment_date` DATE NOT NULL,
+    `appointment_time` TIME NOT NULL,
+    `user_id` INT NOT NULL,
+    `doctor_id` INT NOT NULL,
+    FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`),
+    FOREIGN KEY (`doctor_id`) REFERENCES `Doctors`(`doctor_id`)
 );
 
-INSERT INTO locations (latitude, longitude)
-VALUES
-    (37.774929, -122.419416),
-    (40.712776, -74.005974),
-    (51.507351, -0.127758),
-    (48.856613, 2.352222),
-    (34.052235, -118.243683);
+-- Sample data for Users
+INSERT INTO `Users` (name, password, email) VALUES
+    ('John Doe', 'password123', 'john.doe@example.com'),
+    ('Jane Smith', 'mypassword', 'jane.smith@example.com');
+
+-- Sample data for Doctors
+INSERT INTO `Doctors` (doctor_name, specialized_area, availability) VALUES
+    ('Dr. Alice', 'Cardiology', 'Monday to Friday'),
+    ('Dr. Bob', 'Dermatology', 'Monday, Wednesday, Friday');
+
+-- Sample data for Appointments
+INSERT INTO `Appointments` (appointment_date, appointment_time, user_id, doctor_id) VALUES
+    ('2024-10-10', '10:00:00', 1, 1),
+    ('2024-10-11', '14:30:00', 2, 2);

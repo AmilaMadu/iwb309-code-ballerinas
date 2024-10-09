@@ -1,48 +1,73 @@
 import ballerina/http;
-import ballerina/random;
 import ballerina/sql;
 
 @http:ServiceConfig {
-    cors: {
-        allowOrigins: ["http://localhost:3000"],
+    cors: {         
+        allowOrigins: ["http://localhost:3306"],
         allowMethods: ["GET", "POST", "OPTIONS"]
-    },
-    auth: [
-        {
-            jwtValidatorConfig: {
-                issuer: "wso2",
-                audience: "ballerina",
-                signatureConfig: {
-                    certFile: "resources/public.crt"
-                }
-            },
-            scopes: ["admin"]
-        }
-    ]
+    }
+    // auth: [
+    //     {
+    //         jwtValidatorConfig: {
+    //             issuer: "wso2",
+    //             audience: "ballerina",
+    //             signatureConfig: {
+    //                 certFile: "resources/public.crt"
+    //             }
+    //         },
+    //         scopes: ["admin"]
+    //     }
+    // ]
 }
-service /sales on new http:Listener(9090) {
-    isolated resource function get orders() returns Order[]|error {
-        return selectAllOrders();
+service /appointments on new http:Listener(9090) {
+
+    // Get all appointments
+    isolated resource function get appointments() returns Appointment[]|error {
+        return getAllAppointments();
     };
 
-    isolated resource function get orders/[string id]() returns Order|http:NotFound|http:InternalServerError {
-        Order|sql:Error orderEntry = selectOrder(id);
-        if orderEntry is Order {
-            return orderEntry;
+    // Get appointment by ID
+    //    isolated resource function get cargos/[string cargoId]/orders() returns Order[]|error {
+    isolated resource function get appointments/[int appointmentId]/appointments() returns Appointment|http:NotFound|http:InternalServerError {
+        Appointment|sql:Error appointmentEntry = fetchAppointmentById(appointmentId);
+        if appointmentEntry is Appointment {
+            return appointmentEntry;
         }
-        if (orderEntry is sql:NoRowsError) {
-            return <http:NotFound>{body: {message: "Order not found"}};
+        if (appointmentEntry is sql:NoRowsError) {
+            return <http:NotFound>{body: {message: "Appointment not found"}};
         }
-        return <http:InternalServerError>{body: {message: "Error occurred while retrieving the order"}};
+        return <http:InternalServerError>{body: {message: "Error occurred while retrieving the appointment"}};
     };
 
-    isolated resource function get cargos/[string cargoId]/orders() returns Order[]|error {
-        return selectOrdersByCargoId(cargoId);
+    // Get all doctors
+    isolated resource function get doctors() returns Doctor[]|error {
+        return selectAllDoctors();
     };
 
-    isolated resource function post orders(Order orderEntry) returns http:Ok|http:InternalServerError {
-        orderEntry.cargoId = getCargoId();
-        sql:ExecutionResult|error result = insertOrder(orderEntry);
+    // Get doctor by ID
+    isolated resource function get doctors/[int doctorId]() returns Doctor|http:NotFound|http:InternalServerError {
+        Doctor|sql:Error doctorEntry = fetchDoctorById(doctorId);
+        if doctorEntry is Doctor {
+            return doctorEntry;
+        }
+        if (doctorEntry is sql:NoRowsError) {
+            return <http:NotFound>{body: {message: "Doctor not found"}};
+        }
+        return <http:InternalServerError>{body: {message: "Error occurred while retrieving the doctor"}};
+    };
+
+    // Add new appointment
+    isolated resource function post appointments(Appointment appointmentEntry) returns http:Ok|http:InternalServerError {
+        sql:ExecutionResult|error result = addAppointment(appointmentEntry);
+        if result is sql:ExecutionResult {
+            return http:OK;
+        }
+        return http:INTERNAL_SERVER_ERROR;
+    };
+
+    // Add new doctor
+    isolated resource function post doctors(Doctor doctorEntry) returns http:Ok|http:InternalServerError {
+        sql:ExecutionResult|error result = addDoctor(doctorEntry);
         if result is sql:ExecutionResult {
             return http:OK;
         }
@@ -50,7 +75,40 @@ service /sales on new http:Listener(9090) {
     };
 }
 
-isolated function getCargoId() returns string {
-    int|random:Error id = random:createIntInRange(224, 226);
-    return id is int ? string `S-${id}` : "S-224";
+// Database functions
+
+isolated function getAllAppointments() returns Appointment[]|sql:Error {
+    // Implement logic to fetch all appointments from the database
+    // Example SQL query: "SELECT * FROM appointments"
+    return [];
+}
+
+isolated function fetchAppointmentById(int appointmentId) returns Appointment|sql:Error {
+    // Implement logic to fetch appointment by ID from the database
+    // Example SQL query: "SELECT * FROM appointments WHERE appointment_id = ?"
+    return error("Function not implemented");
+}
+
+isolated function fetchAllDoctors() returns Doctor[]|sql:Error {
+    // Implement logic to fetch all doctors from the database
+    // Example SQL query: "SELECT * FROM doctors"
+    return [];
+}
+
+isolated function fetchDoctorById(int doctorId) returns Doctor|sql:Error {
+    // Implement logic to fetch doctor by ID from the database
+    // Example SQL query: "SELECT * FROM doctors WHERE doctor_id = ?"
+    return error("Function not implemented");
+}
+
+isolated function addAppointment(Appointment appointmentEntry) returns sql:ExecutionResult|sql:Error {
+    // Implement logic to insert new appointment into the database
+    // Example SQL query: "INSERT INTO appointments (appointment_date, appointment_time) VALUES (?, ?)"
+    return error("Function not implemented"); // Placeholder return statement
+}
+
+isolated function addDoctor(Doctor doctorEntry) returns sql:ExecutionResult|sql:Error {
+    // Implement logic to insert new doctor into the database
+    // Example SQL query: "INSERT INTO doctors (doctor_name, specialized_area, availability, appointment_id) VALUES (?, ?, ?, ?)"
+    return error("Function not implemented"); // Placeholder return statement
 }
