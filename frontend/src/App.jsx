@@ -10,6 +10,8 @@ import MyAppointments from './pages/MyAppointments'
 import Appointment from './pages/Appointment'
 import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
+import PrivacyPolicy from './pages/PrivacyPolicy'; // Ensure this path is correct
+
 
 const App = () => {
   return (
@@ -25,6 +27,8 @@ const App = () => {
         <Route path='/my-profile' element={<MyProfile />} />
         <Route path='/my-appointments' element={<MyAppointments />} />
         <Route path='/appointment/:docId' element={<Appointment />} />
+        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+
 
 
       </Routes>
