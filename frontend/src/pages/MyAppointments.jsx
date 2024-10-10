@@ -1,36 +1,59 @@
-import React from 'react'
-import {AppContext} from '../Contexts/AppContext'
-import {useContext} from 'react'
+import React from 'react';
+import { AppContext } from '../Contexts/AppContext';
+import { useContext } from 'react';
 
 const MyAppointments = () => {
-  const {doctors} = useContext(AppContext)
-  return (
-    <div>
-        <p className='pb-3 mt-12 font-medium text-zinc-700 border-b'>My appointment</p>
-        <div>
-            {doctors.slice(0,4).map((item,index)=>(
-              <div className='grid grid-cols-[1fr_3fr] gap-4 sm:flex sm:gap-6 py-2 border-b' key={index}>
-                <div>
-                  <img className='w-32 bg-indigo-50' src={item.image} alt="" />
-                </div>
-                <div className='flex-1 text-sm text-zinc-600'>
-                <p className='text-neutral-800 font-semibold'>{item.name}</p>
-                  <p>{item.speciality}</p>
-                  <p className='text-zinc-700 font-medium mt-1'>Address:</p>
-                  <p className='text-xs'>{item.address.line1}</p>
-                  <p className='text-xs'>{item.address.line2}</p>
-                  <p className='text-xs mt-1'><span className='text-sm text-neutral-700 font-medium'>Date & Time:</span> 25, July,2024 | 8.30 PM</p>
-                </div>
-                <div></div>
-                <div className='flex flex-col gap-2 justify-end'>
-                  <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-primary hover:text-white transition-none duration-300'>Pay Online</button>
-                  <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border  hover:bg-red-600 hover:text-white transition-none duration-300'>Cancel appointment</button>
-                </div>
-              </div>
-            ))}
-        </div>
-    </div>
-  )
-}
+  const { doctors } = useContext(AppContext);
 
-export default MyAppointments
+  return (
+    <div className='max-w-4xl mx-auto px-6 py-10'>
+      {/* Header */}
+      <p className='pb-4 mt-8 font-semibold text-xl text-gray-800 border-b border-gray-300'>
+        My Appointments
+      </p>
+
+      {/* Appointments List */}
+      <div className='mt-6 space-y-6'>
+        {doctors.slice(0, 4).map((item, index) => (
+          <div
+            className='grid grid-cols-1 sm:grid-cols-[1fr_2fr_auto] gap-4 sm:gap-8 p-4 bg-white shadow-md rounded-lg hover:shadow-lg transition-shadow duration-300'
+            key={index}
+          >
+            {/* Doctor Image */}
+            <div className='flex justify-center'>
+              <img
+                className='w-32 h-32 rounded-lg object-cover'
+                src={item.image}
+                alt={item.name}
+              />
+            </div>
+
+            {/* Doctor Details */}
+            <div className='flex flex-col justify-between text-sm text-gray-600'>
+              <div>
+                <p className='text-lg text-gray-900 font-semibold'>{item.name}</p>
+                <p className='text-gray-500'>{item.speciality}</p>
+              </div>
+              <div className='mt-2'>
+                <p className='font-medium text-gray-700'>Date & Time:</p>
+                <p className='text-gray-500'>25 July, 2024 | 8:30 PM</p>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className='flex flex-col justify-between'>
+              <button className='w-full text-sm font-medium text-white bg-primary hover:bg-blue-600 py-2 px-4 rounded transition-all duration-300'>
+                Pay Online
+              </button>
+              <button className='w-full text-sm font-medium text-white bg-red-500 hover:bg-red-600 py-2 px-4 rounded mt-2 transition-all duration-300'>
+                Cancel Appointment
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default MyAppointments;
