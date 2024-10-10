@@ -3,13 +3,13 @@ import Header from './Header';
 import { specialityData } from '../assets/assets'; // Importing the specialityData from assets.js
 import { Link } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa'; // Importing the arrow icon
-import Image from '../path-to-your-image.png';  // Import your image here
+import Image from '../assets/middle.png';  // Import your image here
 
 const SpecialityMenu = () => {
   return (
     <div className='flex flex-col items-center gap-8 py-16 text-gray-800' id='speciality'>
       {/* Section Header */}
-      <h1 className='text-3xl font-semibold text-center'>I'm searching for a</h1>
+      <h1 className='text-5xl font-semibold text-center'>I'm searching for a</h1>
       
       {/* Two-Column Layout */}
       <div className='w-full max-w-screen-lg flex flex-col md:flex-row items-center justify-center gap-10'>

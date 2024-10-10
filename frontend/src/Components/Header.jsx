@@ -7,8 +7,13 @@ const Header = () => {
 
   return (
     <div className='flex flex-col md:flex-row flex-wrap bg-primary rounded-lg px-6 md:px-10 lg:px-20'>
+      {/* ----------Right Side --------*/}
+      <div className='md:w-1/2 relative md:pr-10 lg:pr-16'> {/* Added padding-right */}
+        <img className='w-full md:absolute bottom-11 h-auto rounded-lg' src={assets.header_img} alt="" />
+      </div>
+
       {/* ---------Left Side -------- */}
-      <div className='md:w-1/2 flex flex-col items-start justify-center gap-4 py-4 m-auto md:py-[6.5vw] md:mb-[-20px]'>
+      <div className='md:w-1/2 flex flex-col items-start justify-center gap-4 py-4 m-auto md:py-[6.5vw] md:mb-[-20px] md:pl-10 lg:pl-16'> {/* Added padding-left */}
         <p className='text-3xl md:text-4xl lg:text-5xl text-white font-semibold leading-tight md:leading-tight lg:leading-tight'>
           Book Appointments <br /> Easily
         </p>
@@ -35,14 +40,9 @@ const Header = () => {
             }} 
             className='flex justify-center items-center bg-white px-8 py-4 w-full sm:w-auto text-gray-600 text-sm sm:text-base rounded-full hover:scale-105 transition-all duration-300'
           >
-            Create Account
+            Create Account/Login
           </button>
         </div>
-      </div>
-
-      {/* ----------Right Side --------*/}
-      <div className='md:w-1/2 relative'>
-        <img className='w-full md:absolute bottom-11 h-auto rounded-lg' src={assets.header_img} alt="" />
       </div>
     </div>
   );
