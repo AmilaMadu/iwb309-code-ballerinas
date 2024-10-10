@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppContext } from '../Contexts/AppContext';
 import { assets } from '../assets/assets';
-import RelatedDoctors from '../Components/RelatedDoctors';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
@@ -51,7 +50,7 @@ const Appointment = () => {
     <div className="max-w-2xl mx-auto p-6 bg-gray-50">
       {/* Doctor Information */}
       <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-        <img className="w-32 h-32 rounded-full object-cover" src={assets.profile_pic} alt={docInfo.name} />
+        <img className="w-32 h-32 rounded-full object-cover" src={assets.doc_pic} alt={docInfo.name} />
         <h2 className="text-xl font-semibold mt-4">{docInfo.name}</h2>
         <p>{docInfo.degree} - {docInfo.speciality}</p>
         <p className="mt-2">Appointment Fee: {currencySymbol}{docInfo.fees}</p>
