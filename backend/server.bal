@@ -118,6 +118,13 @@ import ballerina/http;
 import ballerina/log;
 import ballerina/sql;
 
+// Define the UserRecord type
+public type UserRecord record {
+    string email;
+    string name;
+    string password;
+};
+
 
 // Define the result type
 public type CountRecord record {
@@ -186,4 +193,51 @@ service /backend on new http:Listener(9090) {
             check caller->respond(errorResponse);
         }
     }
+    resource function post login(http:Caller caller, http:Request req) returns error? {
+        
+        // Get the login details from the request
+        json payload = check req.getJsonPayload();
+        User loginUser = check payload.fromJsonWithType(User);
+
+        // Query the database to retrieve the user details
+        sql:ParameterizedQuery query = `SELECT email, name, password FROM users WHERE email = ${loginUser.email}`;
+        stream<UserRecord, sql:Error?> resultStream = dbClient->query(query, UserRecord);
+
+        // Initialize result variable
+        UserRecord? result = ();
+        sql:Error? queryError = ();
+
+        var nextResult = resultStream.next();
+        while nextResult is UserRecord? {
+            result = nextResult;
+            nextResult = resultStream.next();
+        }
+        if nextResult is sql:Error {
+            queryError = nextResult;
+        }
+
+        if (queryError is sql:Error) {
+            // Handle the error
+            log:printError("Database query failed", queryError);
+            json errorResponse = { "message": "Internal Server Error" };
+            check caller->respond(errorResponse);
+            return;
+        } else if (result is UserRecord) {
+            // Check if the password matches
+            if (result.password == loginUser.password) {
+                // Respond with success and user details
+                json successResponse = { "message": "Login successful", "user": { "email": result.email, "name": result.name } };
+                check caller->respond(successResponse);
+            } else {
+                // Respond with unauthorized if the password does not match
+                json unauthorizedResponse = { "message": "Invalid email or password" };
+                check caller->respond(unauthorizedResponse);
+            }
+        } else {
+            // Respond with unauthorized if the user does not exist
+            json unauthorizedResponse = { "message": "Invalid email or password" };
+            check caller->respond(unauthorizedResponse);
+        }
+    }
+
 }
