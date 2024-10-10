@@ -7,7 +7,7 @@ const Header = () => {
   const navigate = useNavigate(); // Initialize navigate hook
 
   return (
-    <header className='relative bg-gradient-to-r from-teal-500 to-blue-500 overflow-hidden'>
+    <header className='relative bg-gradient-to-r from-primary to-blue-500 overflow-hidden'>
       {/* Decorative Elements */}
       <div className='absolute top-0 left-0 w-full h-full bg-overlay opacity-50 pointer-events-none z-10'></div>
 
@@ -26,7 +26,7 @@ const Header = () => {
             {/* Book Appointment Button */}
             <RouterLink 
               to="/doctors" // Update the navigation target to "/doctors"
-              className='flex justify-center items-center gap-2 bg-white text-teal-600 px-6 py-3 rounded-full shadow-md hover:bg-teal-100 transition transform hover:scale-105 animate-fadeIn delay-400 cursor-pointer'
+              className='flex justify-center items-center gap-2 bg-white text-primary px-6 py-3 rounded-full shadow-md hover:bg-teal-100 transition transform hover:scale-105 animate-fadeIn delay-400 cursor-pointer'
             >
               <FaCalendarAlt className='w-5 h-5' />
               Book Appointment
@@ -38,7 +38,7 @@ const Header = () => {
                 navigate('/login'); 
                 window.scrollTo({ top: 0, behavior: 'smooth' }); 
               }} 
-              className='flex justify-center items-center bg-white text-teal-600 px-6 py-3 rounded-full shadow-md hover:bg-teal-100 transition transform hover:scale-105 animate-fadeIn delay-600'
+              className='flex justify-center items-center bg-white text-primary px-6 py-3 rounded-full shadow-md hover:bg-teal-100 transition transform hover:scale-105 animate-fadeIn delay-600'
             >
               <FaUserMd className='w-5 h-5' />
               Create Account/Login
