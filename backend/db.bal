@@ -8,7 +8,7 @@ configurable string database = ?;
 configurable string password = ?;
 configurable mysql:Options & readonly connectionOptions = {};
 
-final mysql:Client dbClient = check new(
+public final mysql:Client dbClient = check new(
     host = host,
     port =  port,
     database =  database,
