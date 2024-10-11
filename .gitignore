@@ -6,3 +6,8 @@ backend/target/build
 backend/Dependencies.toml
 backend/target/cache/ballerina/order_service/0.1.0/java17/ballerina-order_service-0.1.0.jar
 backend/target/cache/ballerina/order_service/0.1.0/java17/resources.jar
+backend/target/cache/ballerina/order_service/0.1.0/java17/ballerina-order_service-0.1.0.jar
+backend/target/cache/ballerina/order_service/0.1.0/java17/resources.jar
+.gitignore
+backend/target/cache/ballerina/order_service/0.1.0/java17/ballerina-order_service-0.1.0.jar
+backend/target/cache/ballerina/order_service/0.1.0/java17/resources.jar
