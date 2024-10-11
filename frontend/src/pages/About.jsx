@@ -3,43 +3,31 @@ import { assets } from '../assets/assets'
 
 const About = () => {
   return (
-    <div>
-
-      <div className='text-center text-2xl pt-10 text-gray-500'>
-        <p>ABOUT <span className='text-gray-700 font-medium'>US</span></p>
+    <div className='px-6 lg:px-16 py-16 bg-gray-50'>
+      
+      {/* Section Header */}
+      <div className='text-center'>
+        <h2 className='text-4xl font-bold text-primary mb-4'>About <span className='text-gray-800'>Us</span></h2>
+        <p className='text-lg text-gray-600'>Learn more about our mission, values, and why we strive for excellence.</p>
       </div>
 
-      <div className='my-10 flex flex-col md:flex-row gap-12'>
-        <img className='w-full md:max-w-[360px]' src={assets.about_image} alt="" />
-        <div className='flex flex-col justify-center gap-6 md:w-2/4 text-sm text-gray-600'>
-          <p>Welcome to MedCare Hospital, your trusted partner in managing your healthcare needs conveniently and efficiently. At MedCare, we understand the challenges individuals face when it comes to scheduling doctor appointments and managing their health records.</p>
-          <p>MedCare is committed to excellence in healthcare technology. We continuously strive to enhance our platform, integrating the latest advancements to improve user experience and deliver superior service. Whether you're booking your first appointment or managing ongoing care, MedCare is here to support you every step of the way.</p>
-          <b className='text-gray-900'>Our Vision</b>
-          <p>Our vision at MedCare is to create a seamless healthcare experience for every user. We aim to bridge the gap between patients and healthcare providers, making it easier for you to access the care you need, when you need it.</p>
+      {/* About Section */}
+      <div className='mt-12 flex flex-col md:flex-row gap-12 items-center'>
+        <img className='w-full md:max-w-[400px] h-auto rounded-xl shadow-lg' src={assets.about_image} alt="About MedCare" />
+        <div className='flex flex-col justify-center gap-6 text-gray-700 text-base'>
+          <p>
+            At <span className='font-semibold text-primary'>MedCare</span>, we are dedicated to making healthcare more accessible and convenient. Our platform connects patients with healthcare professionals through an intuitive and seamless system, simplifying the appointment booking process.
+          </p>
+          <p>
+            We believe in using technology to enhance healthcare services. From personalized care recommendations to streamlined communication with doctors, MedCare is at the forefront of healthcare innovation.
+          </p>
+          <b className='text-primary'>Our Vision</b>
+          <p>To create a world where healthcare is easy, accessible, and personalized for everyone.</p>
         </div>
       </div>
-
-      <div className='text-xl my-4'>
-        <p>WHY <span className='text-gray-700 font-semibold'>CHOOSE US</span></p>
-      </div>
-
-      <div className='flex flex-col md:flex-row mb-20'>
-        <div className='border px-10 md:px-16 py-8 sm:py-16 flex flex-col gap-5 text-[15px] hover:bg-primary hover:text-white transition-all duration-300 text-gray-600 cursor-pointer'>
-          <b> EFFICIENCY: </b>
-          <p>Streamlined appointment scheduling that fits into your busy lifestyle.</p>
         </div>
-        <div className='border px-10 md:px-16 py-8 sm:py-16 flex flex-col gap-5 text-[15px] hover:bg-primary hover:text-white transition-all duration-300 text-gray-600 cursor-pointer'>
-          <b> CONVENIENCE: </b>
-          <p>Access to a network of trusted healthcare professionals in your area.</p>
-        </div>
-        <div className='border px-10 md:px-16 py-8 sm:py-16 flex flex-col gap-5 text-[15px] hover:bg-primary hover:text-white transition-all duration-300 text-gray-600 cursor-pointer'>
-          <b> PERSONALIZATION: </b>
-          <p>Tailored recommendations and reminders to help you stay on top of your health.</p>
-        </div>
-      </div>
-  </div>
 
   )
 }
 
-export default About 
+export default About
