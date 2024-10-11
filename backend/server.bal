@@ -193,53 +193,58 @@ service /backend on new http:Listener(9090) {
             check caller->respond(errorResponse);
         }
     }
-    resource function post login(http:Caller caller, http:Request req) returns error? {
+    // resource function post login(http:Caller caller, http:Request req) returns error? {
         
-        // Get the login details from the request
-        json payload = check req.getJsonPayload();
-        UserRecord loginUser = check payload.fromJsonWithType(UserRecord);
+    //     // Get the login details from the request
+    //     json payload = check req.getJsonPayload();
+    //     UserRecord loginUser = check payload.fromJsonWithType(UserRecord);
 
-        // Query the database to retrieve the user details
-        sql:ParameterizedQuery query = `SELECT email, name, password FROM users WHERE email = ${loginUser.email}`;
-        stream<UserRecord, sql:Error?> resultStream = dbClient->query(query, UserRecord);
+    //     // Query the database to retrieve the user details
+    //     sql:ParameterizedQuery query = `SELECT email, name, password FROM users WHERE email = ${loginUser.email}`;
+    //     stream<UserRecord, sql:Error?> resultStream = dbClient->query(query, UserRecord);
 
-        // Initialize result variable
-        UserRecord? result = ();
-        sql:Error? queryError = ();
+    //     // Initialize result variable
+    //     UserRecord? result = ();
+    //     sql:Error? queryError = ();
 
-        var nextResult = resultStream.next();
-        while nextResult is UserRecord? {
-            result = nextResult;
-            nextResult = resultStream.next();
-        }
-        if nextResult is sql:Error {
-            queryError = nextResult;
-        }
+    //     var nextResult = resultStream.next();
+    //     while nextResult is UserRecord? {
+    //         result = nextResult;
+    //         nextResult = resultStream.next();
+    //     }
+    //     if nextResult is sql:Error {
+    //         queryError = nextResult;
+    //     }
 
-        if (queryError is sql:Error) {
-            // Handle the error
-            log:printError("Database query failed", queryError);
-            json errorResponse = { "message": "Internal Server Error" };
-            check caller->respond(errorResponse);
-            return;
-        } else if (result is UserRecord) {
-            // Check if the password matches
-            if (result.password == loginUser.password) {
-                // Respond with success and user details
-                json successResponse = { "message": "Login successful", "user": { "email": result.email, "name": result.name } };
-                check caller->respond(successResponse);
-            } else {
-                // Respond with unauthorized if the password does not match
-                log:printInfo("This is an informational message.xxxx");
-                json unauthorizedResponse = { "message": "Invalid email or password" };
-                check caller->respond(unauthorizedResponse);
-            }
-        } else {
-            // Respond with unauthorized if the user does not exist
-            log:printInfo("This is an informational message.",result);
-            json unauthorizedResponse = { "message": "Invalid email or password" };
-            check caller->respond(unauthorizedResponse);
-        }
-    }
+    //     if (queryError is sql:Error) {
+    //         // Handle the error
+    //         log:printError("Database query failed", queryError);
+    //         json errorResponse = { "message": "Internal Server Error" };
+    //         check caller->respond(errorResponse);
+    //         return;
+    //     } else if (result is UserRecord) {
+    //         // Check if the password matches
+    //         if (result.password == loginUser.password) {
+    //             // Respond with success and user details
+    //             json successResponse = { "message": "Login successful", "user": { "email": result.email, "name": result.name } };
+    //             check caller->respond(successResponse);
+    //         } else {
+    //             // Respond with unauthorized if the password does not match
+    //             log:printInfo("This is an informational message.xxxx");
+    //             json unauthorizedResponse = { "message": "Invalid email or password" };
+    //             check caller->respond(unauthorizedResponse);
+    //         }
+    //     } else {
+    //         // Respond with unauthorized if the user does not exist
+    //         log:printInfo("This is an informational message.");
+            
+            
+    //         log:printInfo("User record found: " + result.toString());
+            
+    //         json unauthorizedResponse = { "message": "Invalid email or password" };
+    //         check caller->respond(unauthorizedResponse);
+    //     }
+    // }
+
 
 }
