@@ -1,5 +1,6 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
   "last_build_time": 1728625718769,
   "last_update_time": 1728622584312,
   "distribution_version": "2201.10.0",
@@ -12,5 +13,12 @@
   "last_modified_time": {
     "order_service": 1728504185625
 >>>>>>> 7f0b579a9f498bbbb5cf3e7cd2e439a31e6f7d09
+=======
+  "last_build_time": 1728636018269,
+  "last_update_time": 1728636018269,
+  "distribution_version": "2201.10.0",
+  "last_modified_time": {
+    "order_service": 1728630980274
+>>>>>>> c8a088cf3499610ac04a08c1d0c76e4f862303f8
   }
 }
