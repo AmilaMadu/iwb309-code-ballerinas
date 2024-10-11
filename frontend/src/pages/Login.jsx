@@ -167,9 +167,9 @@ const Login = () => {
         {message && <p>{message}</p>}
         {user && (
           <div>
-            <h3>User Details</h3>
+            {/*<h3>User Details</h3>
             <p>Email: {user.email}</p>
-            <p>Name: {user.name}</p>
+            <p>Name: {user.name}</p>*/}
           </div>
         )}
       </div>
