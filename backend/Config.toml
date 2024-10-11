@@ -1,0 +1,9 @@
+host = "localhost"
+port = 3306
+user = "root"
+<<<<<<< HEAD
+password = "amilaMa@123MYSQL"
+=======
+password = "pllk"
+>>>>>>> 7f0b579a9f498bbbb5cf3e7cd2e439a31e6f7d09
+database = "doctor_appointment_system"
