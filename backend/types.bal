@@ -1,13 +1,13 @@
 // Type for Appointment
 public type MedicalAppointment record {| 
-    readonly int appointment_id;
+    readonly int appointment_id?;
     string appointment_date;
     string appointment_time;
 |};
 
 // Type for User (Patient)
 public type User record {| 
-    readonly int user_id;
+    readonly int user_id?;
     string name;
     string password;
     string email;
@@ -15,7 +15,7 @@ public type User record {|
 
 // Type for Doctor
 public type MedicalDoctor record {| 
-    readonly int doctor_id;
+    readonly int doctor_id?;
     string doctor_name;
     string specialized_area;
     string availability;
