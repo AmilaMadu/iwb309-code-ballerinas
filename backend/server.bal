@@ -236,7 +236,7 @@ service /backend on new http:Listener(9090) {
             }
         } else {
             // Respond with unauthorized if the user does not exist
-            log:printInfo("This is an informational message.",);
+            log:printInfo("This is an informational message.",result);
             json unauthorizedResponse = { "message": "Invalid email or password" };
             check caller->respond(unauthorizedResponse);
         }
