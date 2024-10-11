@@ -10,9 +10,7 @@ public class Hello{
     }
 }
 
-//comment dvdvbdn
-//comment
-// Lahiru
+
 
 //comment again
 //ghgnf
