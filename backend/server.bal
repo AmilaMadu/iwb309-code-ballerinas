@@ -56,7 +56,7 @@
 //         return <http:InternalServerError>{body: {message: "Error occurred while retrieving the doctor"}};
 //     };
 
-//     // Add new appointment
+//     // Add new appointment 
 //     isolated resource function post appointments(Appointment appointmentEntry) returns http:Ok|http:InternalServerError {
 //         sql:ExecutionResult|error result = addAppointment(appointmentEntry);
 //         if result is sql:ExecutionResult {
@@ -121,7 +121,7 @@ import ballerina/sql;
 // Define the UserRecord type
 public type UserRecord record {
     string email;
-    string name;
+    string name?;
     string password;
 };
 
@@ -133,7 +133,7 @@ public type CountRecord record {
 
 @http:ServiceConfig {
     cors: {         
-        allowOrigins: ["http://localhost:3306"],
+        allowOrigins: ["http://localhost:5173"],
         allowMethods: ["GET", "POST", "OPTIONS"]
     }
 }
@@ -197,7 +197,7 @@ service /backend on new http:Listener(9090) {
         
         // Get the login details from the request
         json payload = check req.getJsonPayload();
-        User loginUser = check payload.fromJsonWithType(User);
+        UserRecord loginUser = check payload.fromJsonWithType(UserRecord);
 
         // Query the database to retrieve the user details
         sql:ParameterizedQuery query = `SELECT email, name, password FROM users WHERE email = ${loginUser.email}`;
@@ -230,11 +230,13 @@ service /backend on new http:Listener(9090) {
                 check caller->respond(successResponse);
             } else {
                 // Respond with unauthorized if the password does not match
+                log:printInfo("This is an informational message.xxxx");
                 json unauthorizedResponse = { "message": "Invalid email or password" };
                 check caller->respond(unauthorizedResponse);
             }
         } else {
             // Respond with unauthorized if the user does not exist
+            log:printInfo("This is an informational message.",);
             json unauthorizedResponse = { "message": "Invalid email or password" };
             check caller->respond(unauthorizedResponse);
         }
