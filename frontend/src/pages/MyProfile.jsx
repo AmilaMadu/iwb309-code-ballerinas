@@ -183,12 +183,14 @@ const MyProfile = () => {
         const errorResponse = await response.json(); // Read the error response bod
         throw new Error('Failed to update profile');
       }
+      
   
       const result = await response.json();
       console.log('Profile updated successfully:', result);
   
       // Optionally, update the user context or state here
-    
+      setUserData(userData);
+      setUserId(prev => ({ ...prev, ...userData })); // Assuming user_id is your user state in context
       setIsEdit(false);  // Exit edit mode
     } catch (error) {
       console.error('Error updating profile:', error);
