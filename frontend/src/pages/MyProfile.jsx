@@ -148,6 +148,7 @@ const MyProfile = () => {
   const {user_id, setUserId} = useContext(AppContext)
   // Initialize userData with context data or default values for missing info
   const [userData, setUserData] = useState({
+    user_id: user_id.user_id || '',
     name: user_id?.name || "",
     image: user_id?.image || assets.profile_pic,
     email: user_id?.email || 'xxxxx@xxx.xxx',
@@ -163,11 +164,37 @@ const MyProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
 
   // Function to handle the submission of edited data
-  const handleSave = () => {
-    // Here you could send the updated data to the backend using an API call
-    console.log("Updated Profile Data: ", userData);
-    setIsEdit(false); // Exit edit mode after saving
+  // const handleSave = () => {
+  //   // Here you could send the updated data to the backend using an API call
+  //   console.log("Updated Profile Data: ", userData);
+  //   setIsEdit(false); // Exit edit mode after saving
+  // };
+  const handleSave = async () => {
+    try {
+      const response = await fetch('http://localhost:9090/backend/update_user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),  // Send the updated user data
+      });
+  
+      if (!response.ok) {
+        const errorResponse = await response.json(); // Read the error response bod
+        throw new Error('Failed to update profile');
+      }
+  
+      const result = await response.json();
+      console.log('Profile updated successfully:', result);
+  
+      // Optionally, update the user context or state here
+    
+      setIsEdit(false);  // Exit edit mode
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
   };
+  
 
   return (
     <div className='max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-lg'>

@@ -118,12 +118,24 @@ import ballerina/http;
 import ballerina/log;
 import ballerina/sql;
 
-// Define the UserRecord type
+
 public type UserRecord record {
     int user_id;
     string email;
     string name?;
     string password;
+};
+public type UserRecordEdit record {
+    int user_id;
+    string email;
+    string name;
+    string phone?;
+    string gender?;
+    string dob?;
+    record { 
+        string line1?; 
+        string line2?; 
+    } address;
 };
 
 public type LoginRequest record {
@@ -246,7 +258,36 @@ service /backend on new http:Listener(9090) {
         // Handle case where no user was found
         json unauthorizedResponse = { "message": "Invalid email or password" };
         check caller->respond(unauthorizedResponse);
+        }
+    }
+    resource function post update_user(http:Caller caller, http:Request req) returns error? {
+    // Get the updated user data from the request
+    json payload = check req.getJsonPayload();
+    log:printInfo("Incoming payload: " + payload.toString());
+    UserRecordEdit updatedUser = check payload.fromJsonWithType(UserRecordEdit);
+    
+    // Query to update the user record in the database
+    sql:ParameterizedQuery updateQuery = `UPDATE users SET name = ${updatedUser.name}, 
+                                             email = ${updatedUser.email}, 
+                                             phone = ${updatedUser.phone}, 
+                                             gender = ${updatedUser.gender}, 
+                                             dob = ${updatedUser.dob}, 
+                                             address_line1 = ${updatedUser.address.line1}, 
+                                             address_line2 = ${updatedUser.address.line2} 
+                                         WHERE user_id = ${updatedUser.user_id}`;
+
+    sql:ExecutionResult result = check dbClient->execute(updateQuery);
+
+    if result.affectedRowCount > 0 {
+        // Respond with success if the update was successful
+        json successResponse = { "message": "Profile updated successfully" };
+        check caller->respond(successResponse);
+    } else {
+        // Respond with an error if no rows were updated
+        json errorResponse = { "message": "Failed to update profile" };
+        check caller->respond(errorResponse);
     }
 }
+
 
 }
