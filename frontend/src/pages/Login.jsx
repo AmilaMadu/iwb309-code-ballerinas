@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { AppContext } from '../Contexts/AppContext'
+import { useContext } from 'react';
 
 const Login = () => {
   const [state, setState] = useState('Sign Up');
@@ -8,7 +10,7 @@ const Login = () => {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [user, setUser] = useState(null);
-
+  const {user_id, setUserId} = useContext(AppContext)
   const navigate = useNavigate(); // Initialize useNavigate
 
   const onSubmitHandler = async (event) => {
@@ -27,15 +29,20 @@ const Login = () => {
       });
   
       const data = await response.json();
+      console.log('Login API response:', data.user);  // Debugging log
       if (response.ok) {
+
         setMessage(data.message);
-  
+        setUserId(data.user);
+        localStorage.setItem('user_id', data.user);
+        
         if (state === 'Sign Up') {
           // Switch to login form after successful sign-up
           setState('Login');
           setMessage('Sign-up successful! Please log in.');
-        } else if (state === 'Login') {
+          } else if (state === 'Login') {
           setUser(data.user);
+          navigate('/doctors');
           // You can add redirection or other actions after successful login
         }
       } else {
@@ -86,7 +93,7 @@ const Login = () => {
             required
           />
         </div>
-        <button className='bg-primary text-white w-full py-2 rounded-md text-base'>
+        <button type='submit' className='bg-primary text-white w-full py-2 rounded-md text-base'>
           {state === 'Sign Up' ? 'Create Account' : 'Login'}
         </button>
         {state === 'Sign Up' ? (

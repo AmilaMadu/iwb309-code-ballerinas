@@ -120,10 +120,17 @@ import ballerina/sql;
 
 // Define the UserRecord type
 public type UserRecord record {
+    int user_id;
     string email;
     string name?;
     string password;
 };
+
+public type LoginRequest record {
+    string email;
+    string password;
+};
+
 
 
 // Define the result type
@@ -194,102 +201,52 @@ service /backend on new http:Listener(9090) {
         }
     }
     resource function post login(http:Caller caller, http:Request req) returns error? {
-        
-        // Get the login details from the request
-        json payload = check req.getJsonPayload();
-        UserRecord loginUser = check payload.fromJsonWithType(UserRecord);
+    // Parse the login payload
+    json payload = check req.getJsonPayload();
+    LoginRequest loginUser = check payload.fromJsonWithType(LoginRequest);
 
-        // Query the database to retrieve the user details
-//         sql:ParameterizedQuery query = `SELECT email, name, password FROM users WHERE email = ${loginUser.email}`;
-//         stream<UserRecord, sql:Error?> resultStream = dbClient->query(query, UserRecord);
+    // Define the parameterized query to fetch the user by email
+    sql:ParameterizedQuery query = `SELECT user_id, email, name, password FROM users WHERE email = ${loginUser.email}`;
 
-//         // Initialize result variable
-//         UserRecord? result = ();
-//         sql:Error? queryError = ();
-    
+    // Execute the query and retrieve a stream of UserRecord
+    stream<UserRecord, sql:Error?> resultStream = dbClient->query(query, UserRecord);
 
-//         var nextResult = resultStream.next();
-//         // while nextResult is UserRecord? {
-//         //     result = nextResult;
-//         //     nextResult = resultStream.next();
-//         // }
+    // Initialize a variable to store the user record
+    UserRecord? userRecord = ();
 
-// //*****************************
-//         if nextResult is sql:Error {
-//             queryError = nextResult;
-//         }
+    // Get the next result from the stream
+    var nextResult = resultStream.next();
+    if nextResult is record {| UserRecord value; |} {
+        // If a record is found, assign it to userRecord
+        userRecord = nextResult.value;
 
-//         if (queryError is sql:Error) {
-//             // Handle the error
-//             log:printError("Database query failed", queryError);
-//             json errorResponse = { "message": "Internal Server Error" };
-//             check caller->respond(errorResponse);
-//             return;
-//         } else if (result is UserRecord) {
-//             // Check if the password matches
-//             if (result.password == loginUser.password) {
-//                 // Respond with success and user details
-//                 json successResponse = { "message": "Login successful", "user": { "email": result.email, "name": result.name } };
-//                 check caller->respond(successResponse);
-//             } else {
-//                 // Respond with unauthorized if the password does not match
-//                 log:printInfo("This is an informational message.xxxx");
-//                 json unauthorizedResponse = { "message": "Invalid email or password" };
-//                 check caller->respond(unauthorizedResponse);
-//             }
-//         } else {
-//             // Respond with unauthorized if the user does not exist
-//             log:printInfo("This is an informational message.");
-            
-            
-//             log:printInfo("User record found: " + result.toString());
-            
-//             json unauthorizedResponse = { "message": "Invalid email or password" };
-//             check caller->respond(unauthorizedResponse);
-//         }
-//     }
-// Define the parameterized query
-sql:ParameterizedQuery query = `SELECT email, name, password FROM users WHERE email = ${loginUser.email}`;
-
-// Execute the query and retrieve a stream of UserRecord
-stream<UserRecord, sql:Error?> resultStream = dbClient->query(query, UserRecord);
-
-// Initialize a variable to store the user record
-UserRecord? userRecord = ();
-
-// Check if we have results in the stream
-var nextResult = resultStream.next();
-if nextResult is record {| UserRecord value; |} {
-    // If a record is found, assign it to userRecord
-    userRecord = nextResult.value;
-    // Check if the password matches
-    if (userRecord is UserRecord && userRecord.password == loginUser.password) {
-        // Respond with success and user details
-        json successResponse = {
-            "message": "Login successful",
-            "user": {
-                "email": userRecord.email,
-                "name": userRecord.name
-            }
-        };
-        check caller->respond(successResponse);
+        // Check if the password matches
+        if userRecord is UserRecord && (userRecord.password == loginUser.password) {
+            // Respond with success and user details
+            json successResponse = {
+                "message": "Login successful",
+                "user": {
+                    "email": userRecord.email,
+                    "name": userRecord.name,
+                    "user_id": userRecord.user_id
+                }
+            };
+            check caller->respond(successResponse);
+        } else {
+            // Respond with unauthorized if the password does not match
+            json unauthorizedResponse = { "message": "Invalid email or password" };
+            check caller->respond(unauthorizedResponse);
+        }
+    } else if nextResult is sql:Error {
+        // Log the error if the query failed
+        log:printError("Error executing query: " + nextResult.toString());
+        json errorResponse = { "message": "Internal Server Error" };
+        check caller->respond(errorResponse);
     } else {
-        // Respond with unauthorized if the password does not match
-        log:printInfo("Invalid password for user: ");
+        // Handle case where no user was found
         json unauthorizedResponse = { "message": "Invalid email or password" };
         check caller->respond(unauthorizedResponse);
     }
-} else if nextResult is sql:Error {
-    // Log the error if the query failed
-    log:printError("Error executing query: " + nextResult.toString());
-    json errorResponse = { "message": "Internal Server Error" };
-    check caller->respond(errorResponse);
-} else {
-    // Handle case where no user was found
-    log:printInfo("No user found with email: " + loginUser.email);
-    json unauthorizedResponse = { "message": "Invalid email or password" };
-    check caller->respond(unauthorizedResponse);
 }
 
-}
 }
