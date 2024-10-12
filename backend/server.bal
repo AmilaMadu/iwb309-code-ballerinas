@@ -138,6 +138,15 @@ public type UserRecordEdit record {
     } address;
 };
 
+public type Appointment record {
+    string doctor_id;
+    string appointment_date;
+    string appointment_time;
+    int user_id;
+    string doctor_name;
+};
+
+
 public type LoginRequest record {
     string email;
     string password;
@@ -260,6 +269,35 @@ service /backend on new http:Listener(9090) {
         check caller->respond(unauthorizedResponse);
         }
     }
+
+    // Add new appointment 
+isolated resource function post appointments(http:Caller caller, http:Request req) returns error? {
+    // Parse the appointment details from the request body
+    json payload = check req.getJsonPayload();
+    Appointment appointmentEntry = check payload.fromJsonWithType(Appointment);
+
+    // Insert the new appointment into the database
+    sql:ParameterizedQuery insertQuery = `INSERT INTO appointments (doctor_id, appointment_date, appointment_time, user_id, doctor_name) 
+                                          VALUES (${appointmentEntry.doctor_id}, 
+                                                  ${appointmentEntry.appointment_date}, 
+                                                  ${appointmentEntry.appointment_time}, 
+                                                  ${appointmentEntry.user_id},
+                                                  ${appointmentEntry.doctor_name})`;
+
+    sql:ExecutionResult execResult = check dbClient->execute(insertQuery);
+
+    // Check if the insert was successful
+    if execResult.affectedRowCount > 0 {
+        // Respond with success
+        json successResponse = { "message": "Appointment booked successfully" };
+        check caller->respond(successResponse);
+    } else {
+        // Respond with an error if insert failed
+        json errorResponse = { "message": "Internal Server Error" };
+        check caller->respond(errorResponse);
+    }
+}
+
     resource function post update_user(http:Caller caller, http:Request req) returns error? {
     // Get the updated user data from the request
     json payload = check req.getJsonPayload();
@@ -288,6 +326,57 @@ service /backend on new http:Listener(9090) {
         check caller->respond(errorResponse);
     }
 }
+
+    resource function get appointments/[string user_id](http:Caller caller, http:Request req) returns error? {
+    // Correcting the query parameter
+    sql:ParameterizedQuery query = `SELECT * FROM appointments WHERE user_id = ${user_id}`;
+
+    // Create a result object to store fetched appointments
+    stream<Appointment, sql:Error?> result = dbClient->query(query, Appointment);
+    json[] appointments = [];
+
+    // Iterate through the results and build the JSON array
+    check from var row in result
+        do {
+            json appointment = {
+                "doctor_id": row["doctor_id"], // Assuming you store doctor name in the appointment table or JOIN doctors table
+                "appointment_date": row["appointment_date"],
+                "appointment_time": row["appointment_time"],
+                "doctor_name": row["doctor_name"] // Assuming you store doctor name in the appointment table or JOIN doctors table
+            };
+            appointments.push(appointment);
+        };
+
+    // If no appointments found, respond with a message
+    if appointments.length() == 0 {
+        json notFoundResponse = { "message": "No appointments found for this user." };
+        check caller->respond(notFoundResponse);
+        return;
+    }
+
+    // Send the appointments array as a JSON response
+    check caller->respond(appointments);
+}
+
+    resource function get booked_slots/[string doctor_id]/[string appointment_date](http:Caller caller, http:Request req) returns error? {
+    log:printInfo("Received request for booked slots");
+    sql:ParameterizedQuery query = `SELECT appointment_time FROM appointments WHERE doctor_id = ${doctor_id} AND appointment_date = ${appointment_date}`;
+    
+    // Create a result object to store booked slots
+    stream<record {| string appointment_time; |}, sql:Error?> result = dbClient->query(query);
+    json[] bookedSlots = [];
+
+    // Iterate through the results and build the JSON array
+    check from var row in result
+        do {
+            bookedSlots.push(row["appointment_time"].toString());
+        };
+
+    // Send the booked slots array as a JSON response
+    check caller->respond(bookedSlots);
+}
+
+
 
 
 }

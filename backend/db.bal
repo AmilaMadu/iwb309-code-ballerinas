@@ -18,10 +18,10 @@ final mysql:Client dbClient = check new(
 );
 
 // Define the Appointment record
-type Appointment record {
-    string date;
-    string time;
-};
+// type Appointment record {
+//     string date;
+//     string time;
+// };
 
 // Define the Doctor record
 type Doctor record {
@@ -32,11 +32,11 @@ type Doctor record {
 };
 
 // Insert a new appointment
-isolated function insertAppointment(Appointment entry) returns sql:ExecutionResult|error {
-    sql:ParameterizedQuery insertQuery = `INSERT INTO appointments (appointment_date, appointment_time) VALUES (
-                                                ${entry.date}, ${entry.time})`;
-    return dbClient->execute(insertQuery);
-}
+// isolated function insertAppointment(Appointment entry) returns sql:ExecutionResult|error {
+//     sql:ParameterizedQuery insertQuery = `INSERT INTO appointments (appointment_date, appointment_time) VALUES (
+//                                                 ${entry.date}, ${entry.time})`;
+//     return dbClient->execute(insertQuery);
+// }
 
 // Insert a new doctor
 isolated function insertDoctor(Doctor entry) returns sql:ExecutionResult|error {
