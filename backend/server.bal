@@ -162,7 +162,7 @@ public type CountRecord record {
 @http:ServiceConfig {
     cors: {         
         allowOrigins: ["http://localhost:5173"],
-        allowMethods: ["GET", "POST", "OPTIONS"]
+        allowMethods: ["GET", "POST", "OPTIONS", "DELETE"]
     }
 }
 service /backend on new http:Listener(9090) {
@@ -374,9 +374,29 @@ isolated resource function post appointments(http:Caller caller, http:Request re
 
     // Send the booked slots array as a JSON response
     check caller->respond(bookedSlots);
+}   
+
+    resource function delete appointments/[int user_id]/[string doctor_id]/[string appointment_date]/[string appointment_time](http:Caller caller, http:Request req) returns error? {
+    // Define the query to delete the appointment
+    sql:ParameterizedQuery deleteQuery = `DELETE FROM appointments 
+                                          WHERE user_id = ${user_id} 
+                                          AND doctor_id = ${doctor_id}
+                                          AND appointment_date = ${appointment_date}
+                                          AND appointment_time = ${appointment_time}`;
+
+    // Execute the query
+    sql:ExecutionResult result = check dbClient->execute(deleteQuery);
+
+    // Check if any rows were affected (appointment was deleted)
+    if result.affectedRowCount > 0 {
+        // Respond with success
+        json successResponse = { "message": "Appointment canceled successfully" };
+        check caller->respond(successResponse);
+    } else {
+        // Respond with a message if no rows were affected (no appointment found)
+        json notFoundResponse = { "message": "Appointment not found or already canceled" };
+        check caller->respond(notFoundResponse);
+    }
 }
-
-
-
 
 }

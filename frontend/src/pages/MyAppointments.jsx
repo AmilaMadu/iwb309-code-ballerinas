@@ -28,6 +28,32 @@ const MyAppointments = () => {
     fetchAppointments();
   }, [user_id]);
 
+  // Handle appointment cancellation
+  const handleCancelAppointment = async (appointment) => {
+    const confirmCancel = window.confirm('Are you sure you want to cancel this appointment?');
+    if (confirmCancel) {
+        try {
+            const encodedDate = encodeURIComponent(appointment.appointment_date);
+            const encodedTime = encodeURIComponent(appointment.appointment_time);
+            const response = await fetch(`http://localhost:9090/backend/appointments/${user_id.user_id}/${appointment.doctor_id}/${encodedDate}/${encodedTime}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                setAppointments(prevAppointments => prevAppointments.filter(appt => appt._id !== appointment._id));
+                alert('Appointment canceled successfully.');
+            } else {
+                console.error('Failed to cancel appointment');
+                alert('Failed to cancel the appointment. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error cancelling appointment:', error);
+            alert('An error occurred while trying to cancel the appointment.');
+        }
+    }
+};
+
+
+
   return (
     <div className='max-w-4xl mx-auto px-6 py-10'>
       {/* Header */}
@@ -69,7 +95,10 @@ const MyAppointments = () => {
 
               {/* Action Buttons */}
               <div className='flex flex-col justify-between'>
-                <button className='w-full text-sm font-medium text-white bg-red-500 hover:bg-red-600 py-2 px-4 rounded mt-2 transition-all duration-300'>
+                <button
+                  onClick={() => handleCancelAppointment(appointment)} // Pass appointment ID here
+                  className='w-full text-sm font-medium text-white bg-red-500 hover:bg-red-600 py-2 px-4 rounded mt-2 transition-all duration-300'
+                >
                   Cancel Appointment
                 </button>
               </div>
