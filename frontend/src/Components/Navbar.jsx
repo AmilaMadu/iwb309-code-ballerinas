@@ -13,6 +13,7 @@ const Navbar = () => {
     const logout = () => {
         setUserId(false)
         localStorage.removeItem('user_id')
+        navigate('/')
     }
     console.log('Current user_id:', user_id);  // Check if the user_id is correctly se
 
