@@ -68,28 +68,28 @@ export const doctors = [
         name: 'Dr. Dilanka Fernando',
         image: assets.doc_pic,
         speciality: 'General physician',
-       fees: 50,
+       fees: 4000,
     },
     {
         _id: 'doc3',
         name: 'Dr. Lakshman Amarasinghe',
         image: assets.doc_pic,
         speciality: 'Dermatologist',
-        fees: 30,
+        fees: 3500,
     },
     {
         _id: 'doc5',
         name: 'Dr. Nalinda Athukorala',
         image: assets.doc_pic,
         speciality: 'Neurologist',
-        fees: 50,
+        fees: 4000,
     },
     {
         _id: 'doc6',
         name: 'Dr. Nuwan Perera',
         image: assets.doc_pic,
         speciality: 'Cardiologist',
-        fees: 50,
+        fees: 3500,
         
     },
     {
@@ -97,7 +97,7 @@ export const doctors = [
         name: 'Dr. Tharindu Jayasekara',
         image: assets.doc_pic,
         speciality: 'General physician',
-        fees: 50,
+        fees: 4000,
        
     },
     {
@@ -105,7 +105,7 @@ export const doctors = [
         name: 'Dr. Prasanna Samarasinghe',
         image: assets.doc_pic,
         speciality: 'Dermatologist',
-        fees: 30,
+        fees: 4000,
         
     },
     {
@@ -113,7 +113,7 @@ export const doctors = [
         name: 'Dr. Mohan Siriwardana',
         image: assets.doc_pic,
         speciality: 'Neurologist',
-        fees: 50,
+        fees: 3500,
       
     },
     {
@@ -121,7 +121,7 @@ export const doctors = [
         name: 'Dr. Malini Rathnayaka',
         image: assets.doc_pic,
         speciality: 'Neurologist',
-       fees: 50,
+       fees: 4500,
       
     },
     {
@@ -129,7 +129,7 @@ export const doctors = [
         name: 'Dr. Tharanga Karunathilaka',
         image: assets.doc_pic,
         speciality: 'General physician',
-       fees: 50,
+       fees: 3500,
        
     },
     {
@@ -137,7 +137,7 @@ export const doctors = [
         name: 'Dr. Nalin Wijesinghe',
         image: assets.doc_pic,
         speciality: 'Dermatologist',
-        fees: 30,
+        fees: 3000,
        
     },
 ]

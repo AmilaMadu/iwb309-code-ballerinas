@@ -30,7 +30,7 @@ const Login = () => {
   
       const data = await response.json();
       console.log('Login API response:', data.user);  // Debugging log
-      if (response.ok) {
+      if (data.message != 'Invalid email or password') {
 
         setMessage(data.message);
         setUserId(data.user);
