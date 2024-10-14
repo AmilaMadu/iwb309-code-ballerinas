@@ -222,6 +222,7 @@ isolated resource function post appointments(http:Caller caller, http:Request re
     // Iterate through the results and build the JSON array
     check from var row in result
         do {
+            log:printInfo("Recieved requests for appointments");
             json appointment = {
                 "doctor_id": row["doctor_id"], // Assuming you store doctor name in the appointment table or JOIN doctors table
                 "appointment_date": row["appointment_date"],
