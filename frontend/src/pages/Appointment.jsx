@@ -4,7 +4,6 @@ import { AppContext } from '../Contexts/AppContext';
 import { assets } from '../assets/assets';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import NotificationBar from './NotificationBar';
 
 const Appointment = () => {
   const { docId } = useParams();
@@ -62,7 +61,6 @@ const Appointment = () => {
       const slot1 = `${hour}:00`;
       const slot2 = `${hour}:30`;
       console.log("Booked Slots from API:", bookedSlots);
-      // Only add slots that are not in the bookedSlots array
       const normalizeSlot = (slot) => {
         const [hour, minute] = slot.split(":");
         return `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
@@ -75,7 +73,6 @@ const Appointment = () => {
       if (!bookedSlots.map(normalizeSlot).includes(slot2)) {
         slots.push(slot2);
       }
-      
     }
     setAvailableSlots(slots);
   };
@@ -87,13 +84,9 @@ const Appointment = () => {
     }
     else if (selectedSlot) {
       const date = new Date(selectedDate);
-
-      // Extract the year, month, and day
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
-
-      // Format the date as YYYY-MM-DD
       const formattedDate = `${year}-${month}-${day}`;
 
       const appointmentDetails = {
@@ -114,11 +107,8 @@ const Appointment = () => {
         });
 
         if (response.ok) {
-          //alert(`Appointment booked on ${selectedDate.toDateString()} at ${selectedSlot}`);
           setModalMessage(`Appointment booked on ${selectedDate.toDateString()} at ${selectedSlot}`);
           setShowModal(true);
-          navigate('/my-appointments');  // Redirect after successful booking
-          window.scrollTo({ top: 0, behavior: 'smooth' }); 
         } else {
           const errorData = await response.json();
           alert(`Error: ${errorData.message}`);
@@ -132,6 +122,12 @@ const Appointment = () => {
     }
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+    navigate('/my-appointments'); // Navigate to the homepage or any other page
+    window.scrollTo(0, 0); // Scroll to top of the page
+  };
+
   return docInfo ? (
     <div className="max-w-2xl mx-auto p-6 bg-gray-50">
       {/* Doctor Information */}
@@ -142,14 +138,19 @@ const Appointment = () => {
         <p className="mt-2">Appointment Fee: {currencySymbol}{docInfo.fees}</p>
       </div>
 
-      <div>
       {showModal && (
-        <NotificationBar
-          message={modalMessage}
-          onClose={() => setShowModal(false)}
-        />
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
+            <h3 className="text-xl font-semibold text-green-600 mb-4">{modalMessage}</h3>
+            <button
+              onClick={handleCloseModal}
+              className="bg-blue-500 text-white px-4 py-2 rounded">
+              Close
+            </button>
+          </div>
+        </div>
       )}
-    </div>
+
       {/* Booking Section */}
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <h3 className="text-lg font-semibold mb-4">Book Your Appointment</h3>
@@ -165,8 +166,7 @@ const Appointment = () => {
               <button
                 key={index}
                 onClick={() => setSelectedSlot(slot)}
-                className={`px-4 py-2 border rounded mr-2 mb-2 ${selectedSlot === slot ? 'bg-blue-500 text-white' : 'bg-gray-100'}`}
-              >
+                className={`px-4 py-2 border rounded mr-2 mb-2 ${selectedSlot === slot ? 'bg-blue-500 text-white' : 'bg-gray-100'}`}>
                 {slot}
               </button>
             ))
