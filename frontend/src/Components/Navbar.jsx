@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { assets } from '../assets/assets';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { AppContext } from '../Contexts/AppContext';
@@ -10,20 +10,35 @@ const Navbar = () => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [activeButton, setActiveButton] = useState(''); // State for active button
     const { user_id, setUserId } = useContext(AppContext);
-    
+    const dropdownRef = useRef(null); // Reference for dropdown to detect outside clicks
+
     const logout = () => {
         setUserId(false);
         localStorage.removeItem('user_id');
         setActiveButton('logout');
         navigate('/');
     };
-    
+
     const handleNavigation = (route, buttonName) => {
         setActiveButton(buttonName);
         navigate(route);
-        scrollTo(0,0);
+        scrollTo(0, 0);
         setShowDropdown(false);
     };
+
+    // Close dropdown if clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400'>
@@ -47,8 +62,8 @@ const Navbar = () => {
                     user_id ? (
                         <div 
                             className='flex items-center gap-2 cursor-pointer relative' 
-                            onMouseEnter={() => setShowDropdown(true)} 
-                            onMouseLeave={() => setShowDropdown(false)}
+                            onClick={() => setShowDropdown(!showDropdown)} // Toggle dropdown on click
+                            ref={dropdownRef}
                         >
                             <img className='w-8 rounded-full' src={assets.profile_pic} alt="Profile" />
                             <img className='w-2.5' src={assets.dropdown_icon} alt="Dropdown Icon" />
@@ -89,7 +104,7 @@ const Navbar = () => {
                         </div>
                     ) : (
                         <button 
-                            onClick={() => { navigate('/login'); scrollTo(0,0); }} 
+                            onClick={() => { navigate('/login'); scrollTo(0, 0); }} 
                             className='bg-primary text-white px-8 py-3 rounded-full font-light hidden md:block'
                         >
                             Create an Account
