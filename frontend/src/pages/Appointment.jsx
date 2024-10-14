@@ -114,7 +114,9 @@ const Appointment = () => {
         });
 
         if (response.ok) {
-          alert(`Appointment booked on ${selectedDate.toDateString()} at ${selectedSlot}`);
+          //alert(`Appointment booked on ${selectedDate.toDateString()} at ${selectedSlot}`);
+          setModalMessage(`Appointment booked on ${selectedDate.toDateString()} at ${selectedSlot}`);
+          setShowModal(true);
           navigate('/my-appointments');  // Redirect after successful booking
           window.scrollTo({ top: 0, behavior: 'smooth' }); 
         } else {

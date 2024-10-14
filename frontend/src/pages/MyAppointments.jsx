@@ -7,24 +7,24 @@ const MyAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const fetchAppointments = async () => {
+    setLoading(true);  // Set loading to true before fetching new data
+    try {
+      const response = await fetch(`http://localhost:9090/backend/appointments/${user_id.user_id}`);
+      if (response.ok) {
+        const data = await response.json();
+        setAppointments(data);
+      } else {
+        console.error('Failed to fetch appointments');
+      }
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   // Fetch appointments when the component loads
   useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const response = await fetch(`http://localhost:9090/backend/appointments/${user_id.user_id}`);
-        if (response.ok) {
-          const data = await response.json();
-          setAppointments(data);
-        } else {
-          console.error('Failed to fetch appointments');
-        }
-      } catch (error) {
-        console.error('Error fetching appointments:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchAppointments();
   }, [user_id]);
 
@@ -40,6 +40,7 @@ const MyAppointments = () => {
             });
             if (response.ok) {
                 setAppointments(prevAppointments => prevAppointments.filter(appt => appt._id !== appointment._id));
+                await fetchAppointments();
                 alert('Appointment canceled successfully.');
             } else {
                 console.error('Failed to cancel appointment');
