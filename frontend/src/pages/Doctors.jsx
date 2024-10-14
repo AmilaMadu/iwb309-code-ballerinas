@@ -24,6 +24,10 @@ const Doctors = () => {
   useEffect(() => {
     console.log('Selected speciality:', selectedSpeciality);
     applyFilter(selectedSpeciality);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   }, [doctors, selectedSpeciality]);
 
   // Handle dropdown change
@@ -32,8 +36,10 @@ const Doctors = () => {
     setSelectedSpeciality(selected);
     if (selected) {
       navigate(`/doctors/${selected}`);
+      window.scrollTo({ top: 0, behavior: 'smooth' }); 
     } else {
       navigate('/doctors');
+      window.scrollTo({ top: 0, behavior: 'smooth' }); 
     }
   };
 
@@ -91,7 +97,7 @@ const Doctors = () => {
 
                 {/* Channel Button */}
                 <button 
-                  onClick={() => navigate(`/appointment/${item._id}`)} 
+                  onClick={() => {navigate(`/appointment/${item._id}`); scrollTo(0,0)} }
                   className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
                 >
                   Channel

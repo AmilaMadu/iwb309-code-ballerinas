@@ -43,6 +43,7 @@ const Login = () => {
           } else if (state === 'Login') {
           setUser(data.user);
           navigate('/doctors');
+          window.scrollTo({ top: 0, behavior: 'smooth' }); 
           // You can add redirection or other actions after successful login
         }
       } else {

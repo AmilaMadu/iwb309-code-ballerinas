@@ -4,12 +4,15 @@ import { specialityData } from '../assets/assets'; // Updated import path
 import Image from '../assets/middle.png'; // Ensure the image path is correct
 
 const SpecialityMenu = () => {
-  const { pathname } = useLocation();
+const { pathname } = useLocation();
 
-  useEffect(() => {
+useEffect(() => {
     // Scroll to the top of the page when the path changes
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+}, [pathname]);
 
   return (
     <section

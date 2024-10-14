@@ -4,6 +4,7 @@ import { AppContext } from '../Contexts/AppContext';
 import { assets } from '../assets/assets';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import NotificationBar from './NotificationBar';
 
 const Appointment = () => {
   const { docId } = useParams();
@@ -14,6 +15,8 @@ const Appointment = () => {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState('');
   const navigate = useNavigate();  // Initialize useNavigate
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   // Fetch doctor information based on docId
   useEffect(() => {
@@ -78,7 +81,11 @@ const Appointment = () => {
   };
 
   const handleBooking = async () => {
-    if (selectedSlot) {
+    if (!user_id){
+      setModalMessage("Please login to book an appointment.");
+      setShowModal(true);
+    }
+    else if (selectedSlot) {
       const date = new Date(selectedDate);
 
       // Extract the year, month, and day
@@ -109,6 +116,7 @@ const Appointment = () => {
         if (response.ok) {
           alert(`Appointment booked on ${selectedDate.toDateString()} at ${selectedSlot}`);
           navigate('/my-appointments');  // Redirect after successful booking
+          window.scrollTo({ top: 0, behavior: 'smooth' }); 
         } else {
           const errorData = await response.json();
           alert(`Error: ${errorData.message}`);
@@ -132,6 +140,14 @@ const Appointment = () => {
         <p className="mt-2">Appointment Fee: {currencySymbol}{docInfo.fees}</p>
       </div>
 
+      <div>
+      {showModal && (
+        <NotificationBar
+          message={modalMessage}
+          onClose={() => setShowModal(false)}
+        />
+      )}
+    </div>
       {/* Booking Section */}
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <h3 className="text-lg font-semibold mb-4">Book Your Appointment</h3>

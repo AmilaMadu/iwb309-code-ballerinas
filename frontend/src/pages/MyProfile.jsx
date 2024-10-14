@@ -256,7 +256,7 @@ const MyProfile = () => {
             </div>
           ) : (
             <p className='text-gray-700'>
-              {userData.address.line1 || "Address not provided"} <br />
+              {userData.address.line1 || "Not Provided"} <br />
               {userData.address.line2}
             </p>
           )}
