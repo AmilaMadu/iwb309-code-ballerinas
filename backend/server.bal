@@ -2,47 +2,6 @@ import ballerina/http;
 import ballerina/log;
 import ballerina/sql;
 
-
-public type UserRecord record {
-    int user_id;
-    string email;
-    string name?;
-    string password;
-};
-public type UserRecordEdit record {
-    int user_id;
-    string email;
-    string name;
-    string phone?;
-    string gender?;
-    string dob?;
-    record { 
-        string line1?; 
-        string line2?; 
-    } address;
-};
-
-public type Appointment record {
-    string doctor_id;
-    string appointment_date;
-    string appointment_time;
-    int user_id;
-    string doctor_name;
-};
-
-
-public type LoginRequest record {
-    string email;
-    string password;
-};
-
-
-
-// Define the result type
-public type CountRecord record {
-    int count;
-};
-
 @http:ServiceConfig {
     cors: {         
         allowOrigins: ["http://localhost:5173"],
@@ -55,9 +14,7 @@ service /backend on new http:Listener(9090) {
         
         // Get the new user object from the request
         json payload = check req.getJsonPayload();
-        User newUser = check payload.fromJsonWithType(User);
-
-
+        UserRecord newUser = check payload.fromJsonWithType(UserRecord);
 
         // Query the database to check if the user already exists using a parameterized query
         sql:ParameterizedQuery query = `SELECT COUNT(*) AS count FROM users WHERE email = ${newUser.email} OR name = ${newUser.name}`;
@@ -78,8 +35,7 @@ service /backend on new http:Listener(9090) {
         }
 
         if queryError is sql:Error {
-            // Handle the error
-            log:printError("Database query failed", queryError);
+            //log:printError("Database query failed", queryError);
             json errorResponse = { "message": "Internal Server Error" };
             check caller->respond(errorResponse);
             return;
@@ -106,182 +62,181 @@ service /backend on new http:Listener(9090) {
         }
     }
     resource function post login(http:Caller caller, http:Request req) returns error? {
-    // Parse the login payload
-    json payload = check req.getJsonPayload();
-    LoginRequest loginUser = check payload.fromJsonWithType(LoginRequest);
+        // Parse the login payload
+        json payload = check req.getJsonPayload();
+        LoginRequest loginUser = check payload.fromJsonWithType(LoginRequest);
 
-    // Define the parameterized query to fetch the user by email
-    sql:ParameterizedQuery query = `SELECT user_id, email, name, password FROM users WHERE email = ${loginUser.email}`;
+        // Define the parameterized query to fetch the user by email
+        sql:ParameterizedQuery query = `SELECT user_id, email, name, password FROM users WHERE email = ${loginUser.email}`;
 
-    // Execute the query and retrieve a stream of UserRecord
-    stream<UserRecord, sql:Error?> resultStream = dbClient->query(query, UserRecord);
+        // Execute the query and retrieve a stream of UserRecord
+        stream<UserRecord, sql:Error?> resultStream = dbClient->query(query, UserRecord);
 
-    // Initialize a variable to store the user record
-    UserRecord? userRecord = ();
+        // Initialize a variable to store the user record
+        UserRecord? userRecord = ();
 
-    // Get the next result from the stream
-    var nextResult = resultStream.next();
-    if nextResult is record {| UserRecord value; |} {
-        // If a record is found, assign it to userRecord
-        userRecord = nextResult.value;
+        // Get the next result from the stream
+        var nextResult = resultStream.next();
+        if nextResult is record {| UserRecord value; |} {
+            // If a record is found, assign it to userRecord
+            userRecord = nextResult.value;
 
-        // Check if the password matches
-        if userRecord is UserRecord && (userRecord.password == loginUser.password) {
-            // Respond with success and user details
-            json successResponse = {
-                "message": "Login successful",
-                "user": {
-                    "email": userRecord.email,
-                    "name": userRecord.name,
-                    "user_id": userRecord.user_id
-                }
-            };
-            check caller->respond(successResponse);
+            // Check if the password matches
+            if userRecord is UserRecord && (userRecord.password == loginUser.password) {
+                // Respond with success and user details
+                json successResponse = {
+                    "message": "Login successful",
+                    "user": {
+                        "email": userRecord.email,
+                        "name": userRecord.name,
+                        "user_id": userRecord.user_id
+                    }
+                };
+                check caller->respond(successResponse);
+            } else {
+                // Respond with unauthorized if the password does not match
+                json unauthorizedResponse = { "message": "Invalid email or password" };
+                check caller->respond(unauthorizedResponse);
+            }
+        } else if nextResult is sql:Error {
+            // Log the error if the query failed
+            log:printError("Error executing query: " + nextResult.toString());
+            json errorResponse = { "message": "Internal Server Error" };
+            check caller->respond(errorResponse);
         } else {
-            // Respond with unauthorized if the password does not match
+            // Handle case where no user was found
             json unauthorizedResponse = { "message": "Invalid email or password" };
             check caller->respond(unauthorizedResponse);
-        }
-    } else if nextResult is sql:Error {
-        // Log the error if the query failed
-        log:printError("Error executing query: " + nextResult.toString());
-        json errorResponse = { "message": "Internal Server Error" };
-        check caller->respond(errorResponse);
-    } else {
-        // Handle case where no user was found
-        json unauthorizedResponse = { "message": "Invalid email or password" };
-        check caller->respond(unauthorizedResponse);
-        }
+            }
     }
 
     // Add new appointment 
-isolated resource function post appointments(http:Caller caller, http:Request req) returns error? {
-    // Parse the appointment details from the request body
-    json payload = check req.getJsonPayload();
-    Appointment appointmentEntry = check payload.fromJsonWithType(Appointment);
+    isolated resource function post appointments(http:Caller caller, http:Request req) returns error? {
+        // Parse the appointment details from the request body
+        json payload = check req.getJsonPayload();
+        Appointment appointmentEntry = check payload.fromJsonWithType(Appointment);
 
-    // Insert the new appointment into the database
-    sql:ParameterizedQuery insertQuery = `INSERT INTO appointments (doctor_id, appointment_date, appointment_time, user_id, doctor_name) 
-                                          VALUES (${appointmentEntry.doctor_id}, 
-                                                  ${appointmentEntry.appointment_date}, 
-                                                  ${appointmentEntry.appointment_time}, 
-                                                  ${appointmentEntry.user_id},
-                                                  ${appointmentEntry.doctor_name})`;
+        // Insert the new appointment into the database
+        sql:ParameterizedQuery insertQuery = `INSERT INTO appointments (doctor_id, appointment_date, appointment_time, user_id, doctor_name) 
+                                            VALUES (${appointmentEntry.doctor_id}, 
+                                                    ${appointmentEntry.appointment_date}, 
+                                                    ${appointmentEntry.appointment_time}, 
+                                                    ${appointmentEntry.user_id},
+                                                    ${appointmentEntry.doctor_name})`;
 
-    sql:ExecutionResult execResult = check dbClient->execute(insertQuery);
+        sql:ExecutionResult execResult = check dbClient->execute(insertQuery);
 
-    // Check if the insert was successful
-    if execResult.affectedRowCount > 0 {
-        // Respond with success
-        json successResponse = { "message": "Appointment booked successfully" };
-        check caller->respond(successResponse);
-    } else {
-        // Respond with an error if insert failed
-        json errorResponse = { "message": "Internal Server Error" };
-        check caller->respond(errorResponse);
+        // Check if the insert was successful
+        if execResult.affectedRowCount > 0 {
+            // Respond with success
+            json successResponse = { "message": "Appointment booked successfully" };
+            check caller->respond(successResponse);
+        } else {
+            // Respond with an error if insert failed
+            json errorResponse = { "message": "Internal Server Error" };
+            check caller->respond(errorResponse);
+        }
     }
-}
 
     resource function post update_user(http:Caller caller, http:Request req) returns error? {
-    // Get the updated user data from the request
-    json payload = check req.getJsonPayload();
-    log:printInfo("Incoming payload: " + payload.toString());
-    UserRecordEdit updatedUser = check payload.fromJsonWithType(UserRecordEdit);
-    
-    // Query to update the user record in the database
-    sql:ParameterizedQuery updateQuery = `UPDATE users SET name = ${updatedUser.name}, 
-                                             email = ${updatedUser.email}, 
-                                             phone = ${updatedUser.phone}, 
-                                             gender = ${updatedUser.gender}, 
-                                             dob = ${updatedUser.dob}, 
-                                             address_line1 = ${updatedUser.address.line1}, 
-                                             address_line2 = ${updatedUser.address.line2} 
-                                         WHERE user_id = ${updatedUser.user_id}`;
+        // Get the updated user data from the request
+        json payload = check req.getJsonPayload();
+        log:printInfo("Incoming payload: " + payload.toString());
+        UserRecordEdit updatedUser = check payload.fromJsonWithType(UserRecordEdit);
+        
+        // Query to update the user record in the database
+        sql:ParameterizedQuery updateQuery = `UPDATE users SET name = ${updatedUser.name}, 
+                                                email = ${updatedUser.email}, 
+                                                phone = ${updatedUser.phone}, 
+                                                gender = ${updatedUser.gender}, 
+                                                dob = ${updatedUser.dob}, 
+                                                address_line1 = ${updatedUser.address.line1}, 
+                                                address_line2 = ${updatedUser.address.line2} 
+                                            WHERE user_id = ${updatedUser.user_id}`;
 
-    sql:ExecutionResult result = check dbClient->execute(updateQuery);
+        sql:ExecutionResult result = check dbClient->execute(updateQuery);
 
-    if result.affectedRowCount > 0 {
-        // Respond with success if the update was successful
-        json successResponse = { "message": "Profile updated successfully" };
-        check caller->respond(successResponse);
-    } else {
-        // Respond with an error if no rows were updated
-        json errorResponse = { "message": "Failed to update profile" };
-        check caller->respond(errorResponse);
+        if result.affectedRowCount > 0 {
+            // Respond with success if the update was successful
+            json successResponse = { "message": "Profile updated successfully" };
+            check caller->respond(successResponse);
+        } else {
+            // Respond with an error if no rows were updated
+            json errorResponse = { "message": "Failed to update profile" };
+            check caller->respond(errorResponse);
+        }
     }
-}
 
     resource function get appointments/[string user_id](http:Caller caller, http:Request req) returns error? {
-    // Correcting the query parameter
-    sql:ParameterizedQuery query = `SELECT * FROM appointments WHERE user_id = ${user_id}`;
+        // Correcting the query parameter
+        sql:ParameterizedQuery query = `SELECT * FROM appointments WHERE user_id = ${user_id}`;
 
-    // Create a result object to store fetched appointments
-    stream<Appointment, sql:Error?> result = dbClient->query(query, Appointment);
-    json[] appointments = [];
+        // Create a result object to store fetched appointments
+        stream<Appointment, sql:Error?> result = dbClient->query(query, Appointment);
+        json[] appointments = [];
 
-    // Iterate through the results and build the JSON array
-    check from var row in result
-        do {
-            log:printInfo("Recieved requests for appointments");
-            json appointment = {
-                "doctor_id": row["doctor_id"], // Assuming you store doctor name in the appointment table or JOIN doctors table
-                "appointment_date": row["appointment_date"],
-                "appointment_time": row["appointment_time"],
-                "doctor_name": row["doctor_name"] // Assuming you store doctor name in the appointment table or JOIN doctors table
+        // Iterate through the results and build the JSON array
+        check from var row in result
+            do {
+                log:printInfo("Recieved requests for appointments");
+                json appointment = {
+                    "doctor_id": row["doctor_id"], // Assuming you store doctor name in the appointment table or JOIN doctors table
+                    "appointment_date": row["appointment_date"],
+                    "appointment_time": row["appointment_time"],
+                    "doctor_name": row["doctor_name"] // Assuming you store doctor name in the appointment table or JOIN doctors table
+                };
+                appointments.push(appointment);
             };
-            appointments.push(appointment);
-        };
 
-    // If no appointments found, respond with a message
-    if appointments.length() == 0 {
-        json notFoundResponse = { "message": "No appointments found for this user." };
-        check caller->respond(notFoundResponse);
-        return;
+        // If no appointments found, respond with a message
+        if appointments.length() == 0 {
+            json notFoundResponse = { "message": "No appointments found for this user." };
+            check caller->respond(notFoundResponse);
+            return;
+        }
+
+        // Send the appointments array as a JSON response
+        check caller->respond(appointments);
     }
-
-    // Send the appointments array as a JSON response
-    check caller->respond(appointments);
-}
 
     resource function get booked_slots/[string doctor_id]/[string appointment_date](http:Caller caller, http:Request req) returns error? {
-    log:printInfo("Received request for booked slots");
-    sql:ParameterizedQuery query = `SELECT appointment_time FROM appointments WHERE doctor_id = ${doctor_id} AND appointment_date = ${appointment_date}`;
-    
-    // Create a result object to store booked slots
-    stream<record {| string appointment_time; |}, sql:Error?> result = dbClient->query(query);
-    json[] bookedSlots = [];
+        //log:printInfo("Received request for booked slots");
+        sql:ParameterizedQuery query = `SELECT appointment_time FROM appointments WHERE doctor_id = ${doctor_id} AND appointment_date = ${appointment_date}`;
+        
+        // Create a result object to store booked slots
+        stream<record {| string appointment_time; |}, sql:Error?> result = dbClient->query(query);
+        json[] bookedSlots = [];
 
-    // Iterate through the results and build the JSON array
-    check from var row in result
-        do {
-            bookedSlots.push(row["appointment_time"].toString());
-        };
+        // Iterate through the results and build the JSON array
+        check from var row in result
+            do {
+                bookedSlots.push(row["appointment_time"].toString());
+            };
 
-    // Send the booked slots array as a JSON response
-    check caller->respond(bookedSlots);
-}   
+        // Send the booked slots array as a JSON response
+        check caller->respond(bookedSlots);
+    }   
 
     resource function delete appointments/[int user_id]/[string doctor_id]/[string appointment_date]/[string appointment_time](http:Caller caller, http:Request req) returns error? {
-    // Define the query to delete the appointment
-    sql:ParameterizedQuery deleteQuery = `DELETE FROM appointments 
-                                          WHERE user_id = ${user_id} 
-                                          AND doctor_id = ${doctor_id}
-                                          AND appointment_date = ${appointment_date}
-                                          AND appointment_time = ${appointment_time}`;
+        // Define the query to delete the appointment
+        sql:ParameterizedQuery deleteQuery = `DELETE FROM appointments 
+                                            WHERE user_id = ${user_id} 
+                                            AND doctor_id = ${doctor_id}
+                                            AND appointment_date = ${appointment_date}
+                                            AND appointment_time = ${appointment_time}`;
 
-    // Execute the query
-    sql:ExecutionResult result = check dbClient->execute(deleteQuery);
+        // Execute the query
+        sql:ExecutionResult result = check dbClient->execute(deleteQuery);
 
-    // Check if any rows were affected (appointment was deleted)
-    if result.affectedRowCount > 0 {
-        // Respond with success
-        json successResponse = { "message": "Appointment canceled successfully" };
-        check caller->respond(successResponse);
-    } else {
-        // Respond with a message if no rows were affected (no appointment found)
-        json notFoundResponse = { "message": "Appointment not found or already canceled" };
-        check caller->respond(notFoundResponse);
+        // Check if any rows were affected (appointment was deleted)
+        if result.affectedRowCount > 0 {
+            // Respond with success
+            json successResponse = { "message": "Appointment canceled successfully" };
+            check caller->respond(successResponse);
+        } else {
+            // Respond with a message if no rows were affected (no appointment found)
+            json notFoundResponse = { "message": "Appointment not found or already canceled" };
+            check caller->respond(notFoundResponse);
+        }
     }
-}
-
 }

@@ -1,5 +1,3 @@
-// src/Components/Footer.jsx
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate
 import { assets } from '../assets/assets';
@@ -29,16 +27,16 @@ const Footer = () => {
           <p className='text-xl font-medium mb-5'>MedCare</p>
           <ul className='flex flex-col gap-2 text-gray-300'>
             <li>
-              <Link to="/" onClick={() => handleLinkClick("/")} className='hover:underline hover:text-teal-300'>Home</Link>
+              <Link to="/" onClick={() => handleLinkClick("/")} className='hover:underline hover:text-blue-300'>Home</Link>
             </li>
             <li>
-              <Link to="/about" onClick={() => handleLinkClick("/about")} className='hover:underline hover:text-teal-300'>About Us</Link>
+              <Link to="/about" onClick={() => handleLinkClick("/about")} className='hover:underline hover:text-blue-300'>About Us</Link>
             </li>
             <li>
-              <Link to="/contact" onClick={() => handleLinkClick("/contact")} className='hover:underline hover:text-teal-300'>Contact Us</Link>
+              <Link to="/contact" onClick={() => handleLinkClick("/contact")} className='hover:underline hover:text-blue-300'>Contact Us</Link>
             </li>
             <li>
-              <Link to="/privacy-policy" onClick={() => handleLinkClick("/privacy-policy")} className='hover:underline hover:text-teal-300'>Privacy Policy</Link>
+              <Link to="/privacy-policy" onClick={() => handleLinkClick("/privacy-policy")} className='hover:underline hover:text-blue-300'>Privacy Policy</Link>
             </li>
           </ul>
         </div>
@@ -48,10 +46,10 @@ const Footer = () => {
           <p className='text-xl font-medium mb-5'>Get in Touch</p>
           <ul className='flex flex-col gap-2 text-gray-300'>
             <li>
-              <a href="tel:+947024050126" className="hover:underline hover:text-teal-300">📞 +94 70 24050126</a>
+              <a href="tel:+947024050126" className="hover:underline hover:text-blue-300">📞 +94 70 24050126</a>
             </li>
             <li>
-              <a href="mailto:codeballerinas@gmail.com" className="hover:underline hover:text-teal-300">✉️ codeballerinas@gmail.com</a>
+              <a href="mailto:codeballerinas@gmail.com" className="hover:underline hover:text-blue-300">✉️ codeballerinas@gmail.com</a>
             </li>
           </ul>
         </div>

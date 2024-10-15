@@ -1,4 +1,3 @@
-// NotificationBar.js
 import React from 'react';
 
 const NotificationBar = ({ message, onClose }) => {

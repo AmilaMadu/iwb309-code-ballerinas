@@ -1,23 +1,37 @@
-// Type for Appointment
-public type MedicalAppointment record {| 
-    readonly int appointment_id?;
-    string appointment_date;
-    string appointment_time;
-|};
-
-// Type for User (Patient)
-public type User record {| 
-    readonly int user_id?;
+public type UserRecord record {
+    int user_id;
+    string email;
     string name;
     string password;
-    string email;
-|};
+};
 
-// Type for Doctor
-public type MedicalDoctor record {| 
-    readonly int doctor_id?;
+public type UserRecordEdit record {
+    int user_id;
+    string email;
+    string name;
+    string phone?;
+    string gender?;
+    string dob?;
+    record { 
+        string line1?; 
+        string line2?; 
+    } address;
+};
+
+public type Appointment record {
+    string doctor_id;
+    string appointment_date;
+    string appointment_time;
+    int user_id;
     string doctor_name;
-    string specialized_area;
-    string availability;
-    int? appointment_id;  // Optional, as a doctor may not have an appointment yet
-|};
+};
+
+public type LoginRequest record {
+    string email;
+    string password;
+};
+
+// Define the result type
+public type CountRecord record {
+    int count;
+};

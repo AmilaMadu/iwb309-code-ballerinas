@@ -21,7 +21,7 @@ const Contact = () => {
 
           <div>
             <p className='font-semibold text-lg text-primary'>Contact Details</p>
-            <p>Tel: <a href="tel:+94702450126" className='text-primary hover:underline'>+94 70 2450126</a><br />
+            <p>Tel: <a href="tel:+94712345678" className='text-primary hover:underline'>+94 70 2450126</a><br />
             Email: <a href="mailto:codeballerinas@gmail.com" className='text-primary hover:underline'>codeballerinas@gmail.com</a></p>
           </div>
 
@@ -32,7 +32,7 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* Map Embed (Optional) */}
+      {/* Map Embed*/}
       <div className='mt-16'>
         <iframe 
           className='w-full h-64 rounded-lg shadow-md'

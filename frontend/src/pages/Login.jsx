@@ -29,7 +29,7 @@ const Login = () => {
       });
   
       const data = await response.json();
-      console.log('Login API response:', data.user);  // Debugging log
+      //console.log('Login API response:', data.user);  // Debugging log
       if (data.message != 'Invalid email or password') {
 
         setMessage(data.message);
@@ -50,7 +50,7 @@ const Login = () => {
         setMessage(data.message);
       }
     } catch (error) {
-      console.error('Error:', error);
+      //console.error('Error:', error);
       setMessage('An error occurred');
     }
   };

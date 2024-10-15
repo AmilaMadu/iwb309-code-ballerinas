@@ -78,7 +78,7 @@ const Doctors = () => {
                 key={index} 
                 className="flex items-center border p-4 rounded shadow-md hover:shadow-lg transition duration-300"
               >
-                {/* Doctor Image */}
+
                 <div className="w-16 h-16 mr-4">
                   {item.image ? (
                     <img className="rounded-full w-full h-full object-cover" src={item.image} alt={item.name} />
@@ -89,7 +89,6 @@ const Doctors = () => {
                   )}
                 </div>
 
-                {/* Doctor Info */}
                 <div className="flex-grow">
                   <p className="text-lg font-semibold text-gray-800">{item.name}</p>
                   <p className="text-sm text-gray-600">{item.speciality}</p>

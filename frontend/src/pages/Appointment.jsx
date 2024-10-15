@@ -79,8 +79,11 @@ const Appointment = () => {
 
   const handleBooking = async () => {
     if (!user_id){
-      setModalMessage("Please login to book an appointment.");
-      setShowModal(true);
+      // setModalMessage("Please login to book an appointment.");
+      // setShowModal(true);
+      // setShowModal(false);
+      navigate('/login');
+      window.scrollTo(0, 0);
     }
     else if (selectedSlot) {
       const date = new Date(selectedDate);
@@ -124,13 +127,12 @@ const Appointment = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    navigate('/my-appointments'); // Navigate to the homepage or any other page
+    navigate('/my-appointments'); 
     window.scrollTo(0, 0); // Scroll to top of the page
   };
 
   return docInfo ? (
     <div className="max-w-2xl mx-auto p-6 bg-gray-50">
-      {/* Doctor Information */}
       <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
         <img className="w-32 h-32 rounded-full object-cover" src={assets.doc_pic} alt={docInfo.name} />
         <h2 className="text-xl font-semibold mt-4">{docInfo.name}</h2>
@@ -151,7 +153,6 @@ const Appointment = () => {
         </div>
       )}
 
-      {/* Booking Section */}
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <h3 className="text-lg font-semibold mb-4">Book Your Appointment</h3>
 

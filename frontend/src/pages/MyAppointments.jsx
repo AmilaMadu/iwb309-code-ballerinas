@@ -6,7 +6,8 @@ const MyAppointments = () => {
   const { user_id } = useContext(AppContext); // Assuming user_id is available in context
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [modalMessage, setModalMessage] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const fetchAppointments = async () => {
     setLoading(true);  // Set loading to true before fetching new data
     try {
@@ -28,6 +29,12 @@ const MyAppointments = () => {
     fetchAppointments();
   }, [user_id]);
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+    navigate('/my-appointments'); 
+    window.scrollTo(0, 0); // Scroll to top of the page
+  };
+
   // Handle appointment cancellation
   const handleCancelAppointment = async (appointment) => {
     const confirmCancel = window.confirm('Are you sure you want to cancel this appointment?');
@@ -39,12 +46,15 @@ const MyAppointments = () => {
                 method: 'DELETE',
             });
             if (response.ok) {
-                setAppointments(prevAppointments => prevAppointments.filter(appt => appt._id !== appointment._id));
-                await fetchAppointments();
-                alert('Appointment canceled successfully.');
+              setModalMessage('Appointment canceled successfully.');
+              setShowModal(true);
+              setAppointments(prevAppointments => prevAppointments.filter(appt => appt._id !== appointment._id));
+              await fetchAppointments();
+                
             } else {
-                console.error('Failed to cancel appointment');
-                alert('Failed to cancel the appointment. Please try again.');
+              console.error('Failed to cancel appointment');
+              setModalMessage('Failed to cancel the appointment. Please try again.');
+              setShowModal(true);
             }
         } catch (error) {
             console.error('Error cancelling appointment:', error);
@@ -109,7 +119,21 @@ const MyAppointments = () => {
       ) : (
         <p>No appointments found.</p>
       )}
+
+{showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
+            <h3 className="text-xl font-semibold text-green-600 mb-4">{modalMessage}</h3>
+            <button
+              onClick={handleCloseModal}
+              className="bg-blue-500 text-white px-4 py-2 rounded">
+              Ok
+            </button>
+          </div>
+        </div>
+      )}
     </div>
+    
   );
 };
 
