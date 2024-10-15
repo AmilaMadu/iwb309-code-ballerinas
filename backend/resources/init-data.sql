@@ -11,14 +11,6 @@ CREATE TABLE `Users` (
     `email` VARCHAR(255) NOT NULL
 );
 
--- Create Doctors table
-CREATE TABLE `Doctors` (
-    `doctor_id` INT AUTO_INCREMENT PRIMARY KEY,
-    `doctor_name` VARCHAR(255) NOT NULL,
-    `specialized_area` VARCHAR(255),
-    `availability` VARCHAR(255)
-);
-
 -- Create Appointments table
 CREATE TABLE `Appointments` (
     `appointment_id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -34,11 +26,6 @@ CREATE TABLE `Appointments` (
 INSERT INTO `Users` (name, password, email) VALUES
     ('John Doe', 'password123', 'john.doe@example.com'),
     ('Jane Smith', 'mypassword', 'jane.smith@example.com');
-
--- Sample data for Doctors
-INSERT INTO `Doctors` (doctor_name, specialized_area, availability) VALUES
-    ('Dr. Alice', 'Cardiology', 'Monday to Friday'),
-    ('Dr. Bob', 'Dermatology', 'Monday, Wednesday, Friday');
 
 -- Sample data for Appointments
 INSERT INTO `Appointments` (appointment_date, appointment_time, user_id, doctor_id) VALUES
