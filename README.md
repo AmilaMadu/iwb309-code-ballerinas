@@ -20,6 +20,9 @@ Ensure you have the following installed on your machine:
 ```
 3. Update the MySQL connection configuration in Config.toml file. 
 4. Create a new databse for the project named doctor_appointment_system.
+```bash
+CREATE DATABASE doctor_appointment_system;
+```
 5. Run the init-data.sql script.
 
 ## Backend Setup (Ballerina) 
