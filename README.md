@@ -1,5 +1,3 @@
-# Web_App
-
 # Website Setup Instructions
 
 This guide will help you set up the website locally, which consists of a frontend (React + Vite) and a backend (Ballerina with MySQL database).
