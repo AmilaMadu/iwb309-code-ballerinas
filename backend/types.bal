@@ -1,7 +1,7 @@
 public type UserRecord record {
-    int user_id;
+    int user_id?;
     string email;
-    string name;
+    string name?;
     string password;
 };
 
