@@ -126,7 +126,7 @@ const Appointment = () => {
         });
 
         if (response.ok) {
-          setModalMessage(`Appointment booked on ${date.toDateString()} at ${selectedSlot}`);
+          setModalMessage(`Appointment booked on ${date.toDateString()} at ${selectedSlot} successfully! Please fill your details in the My profile section.`);
           setShowModal(true);
           // Optionally, you can refresh booked slots after booking
           // fetchBookedSlots(); // If fetchBookedSlots is accessible here
