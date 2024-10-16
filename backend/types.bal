@@ -19,7 +19,7 @@ public type UserRecordEdit record {
 };
 
 public type Appointment record {
-    string doctor_id;
+    int doctor_id;
     string appointment_date;
     string appointment_time;
     int user_id;
@@ -34,4 +34,10 @@ public type LoginRequest record {
 // Define the result type
 public type CountRecord record {
     int count;
+};
+
+public type Doctor record {
+    int doctor_id?;
+    string doctor_name;
+    string specialization;
 };

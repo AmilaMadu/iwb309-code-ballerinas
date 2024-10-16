@@ -239,4 +239,29 @@ service /backend on new http:Listener(9090) {
             check caller->respond(notFoundResponse);
         }
     }
+
+    resource function get doctors(http:Caller caller, http:Request req) returns error? {
+    sql:ParameterizedQuery query = `SELECT doctor_id, name, specialization, fees FROM doctors`;
+
+    // Create a result object to store fetched appointments
+    stream<Doctor, sql:Error?> result = dbClient->query(query, Doctor);
+    json[] doctors = [];
+    
+    // Iterate through the results and build the JSON array
+    check from var row in result
+        do {
+            json doctor = {
+                "doctor_id": row["doctor_id"],
+                "name": <json>row["name"],
+                "speciality": <json>row["specialization"],
+                "fees" : <json>row["fees"]
+            };
+            doctors.push(doctor);
+        };
+
+    // Send the doctors array as a JSON response
+    check caller->respond(doctors);
+    return;
+}
+
 }
