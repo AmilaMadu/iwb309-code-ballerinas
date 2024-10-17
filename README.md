@@ -1,4 +1,4 @@
-##License and Usage
+## License and Usage
 
 All rights reserved. 
 This project and its source code are the intellectual property of Team Code Ballerinas. No part of this code may be copied, modified, distributed, or used in any form without the explicit permission of the authors. For inquiries regarding usage, please contact us for permission.
