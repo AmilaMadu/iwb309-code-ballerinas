@@ -21,7 +21,7 @@ Ensure you have the following installed on your machine:
 ```bash
     git clone "https://github.com/AmilaMadu/iwb309-code-ballerinas.git"
 ```
-3. Update the MySQL connection configuration in Config.toml file. 
+3. Update the MySQL connection configuration in Config.toml file inside the backend folder. 
 4. Create a new databse for the project named doctor_appointment_system.
 ```bash
 CREATE DATABASE doctor_appointment_system;
