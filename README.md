@@ -19,7 +19,7 @@ Ensure you have the following installed on your machine:
 1. Ensure you have MySQL installed and running. Connect to the local instance.
 2. Clone the repository to your local machine using using 
 ```bash
-    git clone https://github.com/AmilaMadu/iwb309-code-ballerinas.git
+    git clone "https://github.com/AmilaMadu/iwb309-code-ballerinas.git"
 ```
 3. Update the MySQL connection configuration in Config.toml file. 
 4. Create a new databse for the project named doctor_appointment_system.
