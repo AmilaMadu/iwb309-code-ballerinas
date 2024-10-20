@@ -36,11 +36,7 @@ CREATE DATABASE doctor_appointment_system;
 ```bash
     cd backend
 ```
-2. Install the necessary Ballerina dependencies. 
-```bash
-    bal dist pull
-```
-3. Run the Ballerina service:
+2. Run the Ballerina service:
 ```bash
     bal run
 ```
