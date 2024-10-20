@@ -12,7 +12,8 @@ This guide will help you set up the website locally, which consists of a fronten
 Ensure you have the following installed on your machine:
 - **Node.js** (v18 or higher) - [Download Node.js](https://nodejs.org/)
 - **Ballerina** (version `2201.10.0`) - [Download Ballerina](https://ballerina.io/)
-- **MySQL** (for the database) - [Download MySQL](https://dev.mysql.com/downloads/installer/
+- **MySQL** (v8.0
+38 for the database) - [Download MySQL](https://dev.mysql.com/downloads/installer/
 )
 
 ## Database Setup
