@@ -22,11 +22,8 @@ Ensure you have the following installed on your machine:
     git clone "https://github.com/AmilaMadu/iwb309-code-ballerinas.git"
 ```
 3. Update the MySQL connection configuration in Config.toml file inside the backend folder. 
-4. Create a new databse for the project named doctor_appointment_system.
-```bash
-CREATE DATABASE doctor_appointment_system;
-```
-5. Run the init-data.sql script.
+
+4. Run the init-data.sql script (located at backend/resources) in the query window.
 
 ## Backend Setup (Ballerina) 
 1. Navigate to the backend directory:
