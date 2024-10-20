@@ -212,7 +212,7 @@ service /backend on new http:Listener(9090) {
             do {
                 bookedSlots.push(row["appointment_time"].toString());
             };
-
+        log:printInfo("Date backend:" +bookedSlots.toString());
         // Send the booked slots array as a JSON response
         check caller->respond(bookedSlots);
     }   

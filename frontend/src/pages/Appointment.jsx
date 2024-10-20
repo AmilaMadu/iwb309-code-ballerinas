@@ -38,7 +38,6 @@ const Appointment = () => {
 
         setIsFetchingSlots(true);
         setSlotsError(null);
-
         try {
           const response = await fetch(`${backendUrl}/backend/booked_slots/${docId}/${formattedDate}`, {
             method: 'GET',
@@ -75,8 +74,8 @@ const Appointment = () => {
 
     // Normalize booked slots for easy comparison
     const normalizedBookedSlots = bookedSlots.map(slot => {
-      const [hour, minute] = slot.appointment_time.split(':');
-      return `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
+    const [hour, minute] = slot.split(':');
+    return `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
     });
 
     for (let hour = startHour; hour < endHour; hour++) {
@@ -114,7 +113,6 @@ const Appointment = () => {
         user_id: user_id.user_id, // Corrected usage
         doctor_name: docInfo.name
       };
-      console.log('Booking appointment:', appointmentDetails);
 
       try {
         const response = await fetch(`${backendUrl}/backend/appointments`, {
@@ -145,7 +143,7 @@ const Appointment = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    navigate('/my-appointments');
+    navigate(`/my-appointments`);
     window.scrollTo(0, 0); // Scroll to top of the page
   };
 

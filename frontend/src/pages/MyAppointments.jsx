@@ -31,9 +31,11 @@ const MyAppointments = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    navigate('/my-appointments'); 
+    setTimeout(() => {
+    navigate(`/my-appointments`); 
     window.scrollTo(0, 0); // Scroll to top of the page
-  };
+  },300);
+};
 
   // Handle appointment cancellation
   const handleCancelAppointment = async (appointment) => {
