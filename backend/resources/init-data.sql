@@ -1,4 +1,4 @@
-CREATE DATABASE doctor_appointment_system;
+USE doctor_appointment_system;
 
 -- Drop existing tables if they exist
 DROP TABLE IF EXISTS `appointments`;
