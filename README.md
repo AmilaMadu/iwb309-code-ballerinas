@@ -26,7 +26,7 @@ Ensure you have the following installed on your machine:
 
 4. Create a new database by running this command in the query window. 
 ```bash
-CREATE DATABASE doctor_appointment_system;
+    CREATE DATABASE doctor_appointment_system;
 ```
 
 5. Run the init-data.sql script (located at backend/resources) in the query window.
