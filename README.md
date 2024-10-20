@@ -23,7 +23,12 @@ Ensure you have the following installed on your machine:
 ```
 3. Update the MySQL connection configuration in Config.toml file inside the backend folder. 
 
-4. Run the init-data.sql script (located at backend/resources) in the query window.
+4. Create a new database by running this command in the query window. 
+```bash
+CREATE DATABASE doctor_appointment_system;
+```
+
+5. Run the init-data.sql script (located at backend/resources) in the query window.
 
 ## Backend Setup (Ballerina) 
 1. Navigate to the backend directory:
